@@ -1,0 +1,6 @@
+{
+  "name": "Celestia Hero Section",
+  "description": "Sección hero celestial con video de fondo, tipografía Instrument Serif y atmósfera etérea.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -252,7 +252,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
 
           {/* PARTE DE ARRIBA COMO TÍTULO: IMPORTANCIA DE LAS RESEÑAS DE TRUSTPILOT */}
           <div className="inline-block relative">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#00b67a] via-[#bcff48] to-[#00b67a] bg-clip-text text-transparent pb-2">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#bcff48] pb-2">
               Importancia de las reseñas de Trustpilot
             </h3>
             <div className="h-1 w-24 sm:w-36 mx-auto bg-gradient-to-r from-[#00b67a] to-[#bcff48] rounded-full mb-4" />
@@ -272,12 +272,14 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
                 placeholder="Buscar una duda o término..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-slate-800/70 border border-slate-700/60 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full pl-9 pr-8 py-2.5 min-h-[44px] bg-slate-800/70 border border-slate-700/60 rounded-xl text-base sm:text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
               />
               {searchQuery && (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                  aria-label="Limpiar búsqueda"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-xs text-slate-400 hover:text-white"
                 >
                   ✕
                 </button>
@@ -286,15 +288,17 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
 
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
+                type="button"
                 onClick={expandAll}
-                className="px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700"
+                className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
               >
                 Expandir todas
               </button>
               <span className="text-slate-700">|</span>
               <button
+                type="button"
                 onClick={collapseAll}
-                className="px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700"
+                className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
               >
                 Colapsar todas
               </button>
@@ -306,8 +310,9 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
             {categories.map((cat) => (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1 text-xs font-medium rounded-full transition-all border ${
+                className={`px-3.5 py-2 min-h-[38px] text-xs font-semibold rounded-full transition-all border flex items-center justify-center active:scale-95 ${
                   selectedCategory === cat
                     ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
                     : 'bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800/60'

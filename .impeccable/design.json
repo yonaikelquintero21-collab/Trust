@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T19:02:15Z",
+  "title": "Design System: TrustUpReviews™",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Trust Emerald",
+        "canonical": "#00b67a",
+        "tonalRamp": ["#002b1c", "#00472f", "#006945", "#008f5f", "#00b67a", "#29cca0", "#63e3bf", "#b5f5e2"]
+      },
+      "accent-lime": {
+        "role": "secondary",
+        "displayName": "Vibrant Lime",
+        "canonical": "#bcff48",
+        "tonalRamp": ["#2a3b0a", "#4a6813", "#74a31e", "#9fdc2b", "#bcff48", "#cdff6f", "#e0ffa0", "#f4ffdc"]
+      },
+      "accent-coral": {
+        "role": "secondary",
+        "displayName": "Google Coral",
+        "canonical": "#ff5a42",
+        "tonalRamp": ["#42120b", "#6e1d13", "#a32b1c", "#d93f2b", "#ff5a42", "#ff7e6c", "#ffa89c", "#ffd7d1"]
+      },
+      "accent-tripadvisor": {
+        "role": "secondary",
+        "displayName": "TripAdvisor Teal",
+        "canonical": "#00aa6c",
+        "tonalRamp": ["#002819", "#00452b", "#006b43", "#008a57", "#00aa6c", "#1ec787", "#5ce0ab", "#b3f5d9"]
+      },
+      "accent-facebook": {
+        "role": "secondary",
+        "displayName": "Meta Blue",
+        "canonical": "#1877f2",
+        "tonalRamp": ["#071f40", "#0c356e", "#1052ab", "#1468d9", "#1877f2", "#4996f5", "#85baf8", "#cbe2fd"]
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Deep Void",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["#050505", "#0a0a0a", "#121212", "#181818", "#242424", "#363636", "#505050", "#787878"]
+      },
+      "surface-card": {
+        "role": "neutral",
+        "displayName": "Card Charcoal",
+        "canonical": "#141414",
+        "tonalRamp": ["#0a0a0a", "#141414", "#1a1a1a", "#222222", "#2e2e2e", "#3f3f3f", "#565656", "#828282"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Instrument Sans Display",
+        "purpose": "Hero and major headlines."
+      },
+      "body": {
+        "displayName": "Outfit Body",
+        "purpose": "Primary readable text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-ambient",
+        "value": "0 20px 40px rgba(0,0,0,0.6)",
+        "purpose": "Deep resting elevation for cards."
+      },
+      {
+        "name": "accent-glow",
+        "value": "0 0 20px rgba(0,182,122,0.45)",
+        "purpose": "Resonant glow for active conversion items."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Smooth spring-like elevation transition."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-converting action button with trust emerald background.",
+      "html": "<button class=\"ds-btn-primary\">VER CATÁLOGO DE PLANES</button>",
+      "css": ".ds-btn-primary { background: #00b67a; color: #ffffff; padding: 14px 28px; border-radius: 9999px; font-weight: 600; font-family: sans-serif; font-size: 15px; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(0,182,122,0.35); } .ds-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,182,122,0.5); }"
+    },
+    {
+      "name": "Platform Badge",
+      "kind": "chip",
+      "refersTo": "chip-badge",
+      "description": "Verification pill badge for score highlights.",
+      "html": "<span class=\"ds-badge\">Excelente 4.9 ★</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; background: rgba(0,182,122,0.2); color: #34e0a1; border: 1px solid rgba(0,182,122,0.35); text-transform: uppercase; letter-spacing: 0.05em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Neon Citadel of Social Proof",
+    "overview": "TrustUpReviews™ proyecta solvencia inquebrantable a través de una estética nocturna inspirada en terminales financieras de alta gama y experiencias cinemáticas inmersivas.",
+    "keyCharacteristics": [
+      "Fondo negro profundo con capas tonales sutiles y gradientes oscuros envolventes.",
+      "Acentos cromáticos semánticos vinculados a cada plataforma evaluadora.",
+      "Animaciones sincronizadas y elementos visuales interactivos.",
+      "Tipografía moderna de peso contundente complementada con detalles editoriales refinados."
+    ],
+    "rules": [
+      {
+        "name": "The Platform Anchor Rule",
+        "body": "Cada tarjeta o sección dedicada a una plataforma debe adoptar su acento semántico en borde, resplandor y badges para crear reconocimiento instantáneo sin mezclar identidades de marca.",
+        "section": "colors"
+      },
+      {
+        "name": "The Kinetic Elevation Rule",
+        "body": "Las tarjetas y elementos interactivos en reposo reposan sobre bordes tenues; al recibir hover o foco activo, ascienden físicamente (translateY(-9px)) y refuerzan su borde con el acento correspondiente.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do emplear el color de acento de la plataforma correspondiente en sus respectivas tarjetas y componentes.",
+      "Do acompañar cifras de métricas con etiquetas semánticas claras y estrellas visuales bien contrastadas.",
+      "Do preservar sombras tipográficas de protección cuando el texto se superponga a imágenes o vídeos.",
+      "Do respetar la regla de movimiento reducido desactivando animaciones continuas."
+    ],
+    "donts": [
+      "Don't mezclar acentos de marcas distintas en un mismo bloque de producto o tarjeta de precio.",
+      "Don't utilizar blancos planos al 100% en fondos o cajas de contenido.",
+      "Don't colocar textos informativos largos sin un ancho máximo de lectura delimitado (65ch a 75ch).",
+      "Don't omitir estados de interacción (hover, focus-visible) en botones, enlaces o tarjetas de precios."
+    ]
+  }
+}

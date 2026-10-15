@@ -26,6 +26,8 @@ interface PlatformCatalog {
   description: string;
   accentColor: string;
   accentBg: string;
+  image?: string;
+  alt?: string;
   plans: CatalogPlan[];
 }
 
@@ -38,6 +40,8 @@ const CATALOGS_DATA: Record<string, PlatformCatalog> = {
     description: 'Aumenta tu puntuación de estrellas con perfiles geolocalizados de alto nivel y reseñas con texto personalizado que disparan tus llamadas y visitas.',
     accentColor: '#ff5a42',
     accentBg: 'bg-[#ff5a42]/10 border-[#ff5a42]/30',
+    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Boutique café con terraza y clientes consultando opiniones en Google Maps',
     plans: [
       {
         id: 'google-10',
@@ -112,6 +116,8 @@ const CATALOGS_DATA: Record<string, PlatformCatalog> = {
     description: 'Transforma la confianza de tu tienda online o SaaS logrando la insignia verde "Excelente" que incrementa drásticamente la conversión de ventas.',
     accentColor: '#bcff48',
     accentBg: 'bg-[#bcff48]/10 border-[#bcff48]/30',
+    image: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Experiencia de compra segura y pago verificado en tienda online',
     plans: [
       {
         id: 'trust-10',
@@ -184,6 +190,8 @@ const CATALOGS_DATA: Record<string, PlatformCatalog> = {
     description: 'Sitúa tu establecimiento entre los más recomendados por comensales y turistas, aspirando a la codiciada insignia Travellers’ Choice.',
     accentColor: '#bcff48',
     accentBg: 'bg-[#bcff48]/10 border-[#bcff48]/30',
+    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Restaurante de alta gastronomía con ambiente cálido galardonado en TripAdvisor',
     plans: [
       {
         id: 'trip-12',
@@ -254,6 +262,8 @@ const CATALOGS_DATA: Record<string, PlatformCatalog> = {
     description: 'Multiplica la confianza de quienes visitan tu página de Facebook, potenciando los clics y el rendimiento de tus anuncios de Meta Ads.',
     accentColor: '#ff5a42',
     accentBg: 'bg-[#ff5a42]/10 border-[#ff5a42]/30',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Comunidad de clientes satisfechos compartiendo recomendaciones en Facebook',
     plans: [
       {
         id: 'fb-15',
@@ -451,8 +461,19 @@ const PHONE_NOTIFICATIONS: PhoneNotification[] = [
 function PlatformSectionImage({ platform }: { platform: string }) {
   if (platform === 'Google Reviews') {
     return (
-      <div className="w-full rounded-xl overflow-hidden border border-[#ff5a42]/30 bg-gradient-to-r from-[#1c1412] via-[#2a1714] to-[#141414] p-4 sm:p-5 shadow-2xl relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="w-full rounded-xl overflow-hidden border border-[#ff5a42]/30 bg-[#121316] p-4 sm:p-5 shadow-2xl relative">
+        {/* Imagen de fondo ambiental curada con degradado cinematográfico */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-xl">
+          <img
+            src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80"
+            alt="Google Reviews fondo"
+            className="w-full h-full object-cover object-center opacity-25 saturate-125"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#121316] via-[#121316]/92 to-[#121316]/75" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121316] via-transparent to-black/40" />
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-2xl font-bold text-[#ff5a42] shrink-0 shadow-inner">
               G
@@ -472,7 +493,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 bg-black/50 px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
+          <div className="flex items-center gap-2.5 bg-black/60 backdrop-blur-md px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
             <span className="section-title text-2xl sm:text-3xl font-extrabold text-white">5.0</span>
             <div className="flex text-amber-400 text-lg">
               {'★★★★★'.split('').map((s, i) => (
@@ -484,7 +505,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
         </div>
 
         {/* Muestra gráfica de reseña real */}
-        <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/40 rounded-lg p-3.5">
+        <div className="relative z-10 mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/50 backdrop-blur-md rounded-lg p-3.5 border border-white/5">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-black font-bold text-xs flex items-center justify-center shrink-0">
             D
           </div>
@@ -507,8 +528,19 @@ function PlatformSectionImage({ platform }: { platform: string }) {
 
   if (platform === 'Trustpilot') {
     return (
-      <div className="w-full rounded-xl overflow-hidden border border-[#00b67a]/40 bg-gradient-to-r from-[#111910] via-[#162713] to-[#141414] p-4 sm:p-5 shadow-2xl relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="w-full rounded-xl overflow-hidden border border-[#00b67a]/40 bg-[#121316] p-4 sm:p-5 shadow-2xl relative">
+        {/* Imagen de fondo ambiental curada con degradado cinematográfico */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-xl">
+          <img
+            src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=1200&q=80"
+            alt="Trustpilot fondo"
+            className="w-full h-full object-cover object-center opacity-25 saturate-125"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#121316] via-[#121316]/92 to-[#121316]/75" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121316] via-transparent to-black/40" />
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-xl bg-[#00b67a]/20 border border-[#00b67a]/40 flex items-center justify-center text-2xl font-bold text-[#00b67a] shrink-0 shadow-inner">
               ★
@@ -528,7 +560,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 bg-black/50 px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
+          <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span key={star} className="w-6 h-6 rounded bg-[#00b67a] flex items-center justify-center text-xs font-bold text-white shadow-sm">
@@ -541,7 +573,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
         </div>
 
         {/* Muestra gráfica de reseña real */}
-        <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/40 rounded-lg p-3.5">
+        <div className="relative z-10 mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/50 backdrop-blur-md rounded-lg p-3.5 border border-white/5">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00b67a] to-emerald-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
             E
           </div>
@@ -564,8 +596,19 @@ function PlatformSectionImage({ platform }: { platform: string }) {
 
   if (platform === 'TripAdvisor') {
     return (
-      <div className="w-full rounded-xl overflow-hidden border border-[#34e0a1]/40 bg-gradient-to-r from-[#111915] via-[#162720] to-[#141414] p-4 sm:p-5 shadow-2xl relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="w-full rounded-xl overflow-hidden border border-[#34e0a1]/40 bg-[#121316] p-4 sm:p-5 shadow-2xl relative">
+        {/* Imagen de fondo ambiental curada con degradado cinematográfico */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-xl">
+          <img
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80"
+            alt="TripAdvisor fondo"
+            className="w-full h-full object-cover object-center opacity-25 saturate-125"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#121316] via-[#121316]/92 to-[#121316]/75" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121316] via-transparent to-black/40" />
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-xl bg-[#34e0a1]/20 border border-[#34e0a1]/40 flex items-center justify-center text-2xl font-bold text-[#34e0a1] shrink-0 shadow-inner">
               ◎
@@ -585,7 +628,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 bg-black/50 px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
+          <div className="flex items-center gap-2.5 bg-black/60 backdrop-blur-md px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
             <span className="section-title text-2xl sm:text-3xl font-extrabold text-white">5.0</span>
             <div className="flex gap-1.5">
               {[1, 2, 3, 4, 5].map((circle) => (
@@ -597,7 +640,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
         </div>
 
         {/* Muestra gráfica de reseña real */}
-        <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/40 rounded-lg p-3.5">
+        <div className="relative z-10 mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/50 backdrop-blur-md rounded-lg p-3.5 border border-white/5">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00aa6c] to-teal-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
             M
           </div>
@@ -620,8 +663,19 @@ function PlatformSectionImage({ platform }: { platform: string }) {
 
   // Facebook
   return (
-    <div className="w-full rounded-xl overflow-hidden border border-[#1877f2]/40 bg-gradient-to-r from-[#171419] via-[#241727] to-[#141414] p-4 sm:p-5 shadow-2xl relative">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full rounded-xl overflow-hidden border border-[#1877f2]/40 bg-[#121316] p-4 sm:p-5 shadow-2xl relative">
+      {/* Imagen de fondo ambiental curada con degradado cinematográfico */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-xl">
+        <img
+          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80"
+          alt="Facebook fondo"
+          className="w-full h-full object-cover object-center opacity-25 saturate-125"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#121316] via-[#121316]/92 to-[#121316]/75" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121316] via-transparent to-black/40" />
+      </div>
+
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-[#1877f2]/20 border border-[#1877f2]/40 flex items-center justify-center text-2xl font-bold text-[#1877f2] shrink-0 shadow-inner">
             f
@@ -641,7 +695,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-black/50 px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
+        <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3.5 py-2 rounded-lg border border-white/10 shrink-0">
           <span className="px-2.5 py-1 rounded-full bg-blue-600/30 border border-blue-500/40 text-xs font-bold text-blue-300">
             👍 100% SÍ Recomienda
           </span>
@@ -650,7 +704,7 @@ function PlatformSectionImage({ platform }: { platform: string }) {
       </div>
 
       {/* Muestra gráfica de reseña real */}
-      <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/40 rounded-lg p-3.5">
+      <div className="relative z-10 mt-4 pt-3.5 border-t border-white/10 flex items-start gap-3 bg-black/50 backdrop-blur-md rounded-lg p-3.5 border border-white/5">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1877f2] to-blue-800 text-white font-bold text-xs flex items-center justify-center shrink-0">
           P
         </div>
@@ -823,20 +877,69 @@ export default function App() {
   const heroRef = useRef<HTMLElement | null>(null);
   const portfolioRef = useRef<HTMLElement | null>(null);
 
-  // Sincronización de scroll controlada, lenta y armónica
+  // Sincronización de scroll y video optimizada: se ejecuta solo bajo movimiento y se detiene en reposo
   useEffect(() => {
     let ticking = false;
+    let rafId: number | null = null;
+    let isMounted = true;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const stepVideo = () => {
+      const video = videoRef.current;
+      if (!video || video.readyState < 2 || prefersReducedMotion) {
+        rafId = null;
+        return;
+      }
+
+      if (!video.paused) {
+        video.pause();
+      }
+
+      const duration = video.duration && !isNaN(video.duration) ? video.duration : 6;
+      const maxGuideTime = Math.min(duration, 7.5);
+      const targetTime = scrollProgressRef.current * maxGuideTime;
+      const current = video.currentTime;
+      const diff = targetTime - current;
+
+      let keepRunning = false;
+
+      if (scrollProgressRef.current === 0) {
+        if (current > 0.01) {
+          video.currentTime = Math.max(0, current - 0.06);
+          keepRunning = true;
+        } else if (current !== 0) {
+          video.currentTime = 0;
+        }
+      } else if (Math.abs(diff) > 0.02) {
+        video.currentTime = Math.max(0, Math.min(duration, current + diff * 0.16));
+        keepRunning = true;
+      }
+
+      if (isMounted && keepRunning) {
+        rafId = requestAnimationFrame(stepVideo);
+      } else {
+        rafId = null;
+      }
+    };
+
+    const triggerVideoSync = () => {
+      if (rafId === null && isMounted && !prefersReducedMotion) {
+        rafId = requestAnimationFrame(stepVideo);
+      }
+    };
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
           const heroHeight = heroRef.current ? heroRef.current.offsetHeight : window.innerHeight;
-          // Curva de progreso suave, lenta y controlada (0 en reposo arriba, 1 al avanzar plenamente a la siguiente sección)
           const progress = Math.min(Math.max(scrollY / (heroHeight * 1.25), 0), 1);
           setScrollProgress(progress);
           scrollProgressRef.current = progress;
           ticking = false;
+          triggerVideoSync();
         });
         ticking = true;
       }
@@ -844,53 +947,14 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
+    triggerVideoSync();
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // Video como guía: al bajar avanza, al subir retrocede, y al volver arriba regresa a su base original
-  useEffect(() => {
-    let rafId: number;
-    let isMounted = true;
-
-    const syncVideo = () => {
-      const video = videoRef.current;
-      if (video && video.readyState >= 2) {
-        // Pausado para controlar cada cuadro con precisión mediante el scroll del usuario
-        if (!video.paused) {
-          video.pause();
-        }
-        const duration = video.duration && !isNaN(video.duration) ? video.duration : 6;
-        const maxGuideTime = Math.min(duration, 7.5);
-        const targetTime = scrollProgressRef.current * maxGuideTime;
-
-        const current = video.currentTime;
-        const diff = targetTime - current;
-
-        if (scrollProgressRef.current === 0) {
-          // Regresa exactamente a su base original (frame 0)
-          if (current > 0.01) {
-            video.currentTime = Math.max(0, current - 0.06);
-          } else {
-            video.currentTime = 0;
-          }
-        } else if (Math.abs(diff) > 0.02) {
-          // Movimiento controlado y armonioso: avanza al bajar, retrocede al subir
-          video.currentTime = Math.max(0, Math.min(duration, current + diff * 0.16));
-        }
-      }
-
-      if (isMounted) {
-        rafId = requestAnimationFrame(syncVideo);
-      }
-    };
-
-    rafId = requestAnimationFrame(syncVideo);
     return () => {
       isMounted = false;
-      cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, []);
 
@@ -960,38 +1024,62 @@ export default function App() {
   const projects = [
     {
       id: 'google',
-      title: 'Kinetic Type',
+      title: 'Google Business & Maps',
+      subtitle: 'Posicionamiento Local Pack',
       platform: 'Google Reviews',
       metric: '4.9 ★ Calificación media',
-      tag: 'Optimización de 5 Estrellas',
+      tag: 'Optimización 5 Estrellas',
+      rating: '5.0★',
+      reviewsCount: '1.420+ reseñas',
       accentColor: '#ff5a42',
+      image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
+      alt: 'Boutique café con terraza y clientes consultando recomendaciones en Google Maps',
+      description: 'Eleva tu visibilidad en búsquedas locales y atrae llamadas directas con reseñas auténticas y geolocalizadas.',
       gradient: 'linear-gradient(145deg, #000000 0%, #1f110f 40%, #351a15 70%, #ff5a42 100%)',
     },
     {
       id: 'trustpilot',
-      title: 'New Matter',
+      title: 'TrustScore & E-commerce',
+      subtitle: 'Insignia Oficial de Confianza',
       platform: 'Trustpilot',
       metric: 'Excelente · TrustScore 4.8',
       tag: 'Verificación Automatizada',
-      accentColor: '#bcff48',
+      rating: '4.9★',
+      reviewsCount: '2.850+ opiniones',
+      accentColor: '#00b67a',
+      image: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=800&q=80',
+      alt: 'Experiencia de compra segura y pago verificado en tienda online',
+      description: 'Multiplica la conversión de tu tienda online o SaaS logrando la insignia verde "Excelente" de Trustpilot.',
       gradient: 'linear-gradient(145deg, #000000 0%, #101a0c 40%, #213217 70%, #bcff48 100%)',
     },
     {
       id: 'tripadvisor',
-      title: 'Signal House',
+      title: 'Travellers’ Choice & Turismo',
+      subtitle: 'Top 10 en Destino y Hoteles',
       platform: 'TripAdvisor',
       metric: 'N.º 1 en Popularidad',
       tag: 'Prestigio para Viajeros',
-      accentColor: '#bcff48',
+      rating: '5.0★',
+      reviewsCount: '940+ experiencias',
+      accentColor: '#34e0a1',
+      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
+      alt: 'Restaurante de alta gastronomía con ambiente cálido galardonado en TripAdvisor',
+      description: 'Conquista a turistas asegurando las mejores recomendaciones gastronómicas y hoteleras de tu ciudad.',
       gradient: 'linear-gradient(145deg, #000000 0%, #0f1c11 45%, #2a3a1f 75%, #bcff48 100%)',
     },
     {
       id: 'facebook',
-      title: 'Future Field',
+      title: 'Recomendaciones & Fan Page',
+      subtitle: 'Prueba Social y Meta Ads',
       platform: 'Facebook',
       metric: '98% Recomendado',
       tag: 'Prueba Social Orgánica',
-      accentColor: '#ff5a42',
+      rating: '100% 👍',
+      reviewsCount: '840+ votos',
+      accentColor: '#1877f2',
+      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
+      alt: 'Comunidad de clientes satisfechos compartiendo experiencias y recomendaciones',
+      description: 'Dispara la credibilidad en redes sociales y maximiza el rendimiento de tus campañas en Meta Ads.',
       gradient: 'linear-gradient(145deg, #000000 0%, #1c1014 45%, #3b1b1f 75%, #ff5a42 100%)',
     },
   ];
@@ -1103,7 +1191,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(true)}
-                  className="lg:hidden p-2 text-white hover:opacity-80 transition-opacity focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-md"
+                  className="lg:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
                   aria-label="Abrir menú de navegación"
                   aria-expanded={mobileMenuOpen}
                 >
@@ -1115,7 +1203,7 @@ export default function App() {
 
           {/* TÍTULO EN LA PARTE INFERIOR IZQUIERDA: '★ TRUST REVIEWS' QUE APARECE CON ANIMACIÓN CONTROLADA */}
           <div
-            className={`flex-1 flex flex-col justify-end items-start text-left px-6 md:px-12 lg:px-16 pb-6 md:pb-10 w-full max-w-7xl mx-auto will-change-transform transition-all duration-1000 ease-out ${
+            className={`flex-1 flex flex-col justify-end items-start text-left px-4 sm:px-8 md:px-12 lg:px-16 pb-6 md:pb-10 w-full max-w-7xl mx-auto will-change-transform transition-all duration-1000 ease-out ${
               titleLettersVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{
@@ -1126,11 +1214,11 @@ export default function App() {
               transition: 'transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)',
             }}
           >
-            <h1 className="section-title text-[#f7f7f2] font-bold tracking-tight text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[104px] leading-[0.92] text-left text-balance flex items-center">
-              <Star className="w-7 h-7 sm:w-9 sm:h-9 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 fill-[#bcff48] text-[#bcff48] mr-2 sm:mr-3.5 shrink-0 transition-transform duration-700" />
+            <h1 className="section-title text-[#f7f7f2] font-bold tracking-tight text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-[104px] leading-[0.95] text-left flex items-center flex-wrap sm:flex-nowrap gap-x-2">
+              <Star className="w-6 h-6 sm:w-9 sm:h-9 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 fill-[#bcff48] text-[#bcff48] shrink-0 transition-transform duration-700" />
               <span className="tracking-tight">TRUST REVIEWS</span>
             </h1>
-            <p className="mt-3.5 text-sm sm:text-base md:text-lg text-white/80 font-normal tracking-wide max-w-xl">
+            <p className="mt-2.5 sm:mt-3.5 text-xs sm:text-base md:text-lg text-white/80 font-normal tracking-wide max-w-xl">
               Gestión de reputación online, publicación estratégica y eliminación de reseñas negativas.
             </p>
           </div>
@@ -1157,13 +1245,13 @@ export default function App() {
             role="dialog"
             aria-modal="true"
             aria-label="Menú principal de navegación"
-            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-6 lg:hidden animate-hero-entrance"
+            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-5 sm:p-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden animate-hero-entrance"
           >
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center shadow-md">
                   <div className="w-full h-full bg-black rounded-[6px] flex items-center justify-center">
-                    <Star className="w-3.5 h-3.5 fill-[#bcff48] text-[#bcff48]" />
+                    <Star className="w-4 h-4 fill-[#bcff48] text-[#bcff48]" />
                   </div>
                 </div>
                 <span className="section-title text-xl font-bold text-white tracking-wider">
@@ -1173,14 +1261,14 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-white hover:opacity-80 transition-opacity focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-md"
+                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
                 aria-label="Cerrar menú"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
             </div>
 
-            <nav className="flex flex-col items-center gap-3.5 my-auto font-outfit text-sm tracking-widest uppercase text-white text-small-shadow overflow-y-auto py-6">
+            <nav className="flex flex-col items-stretch gap-2.5 my-auto font-outfit text-sm tracking-wider uppercase text-white overflow-y-auto py-5 max-w-sm mx-auto w-full no-scrollbar">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
@@ -1192,10 +1280,10 @@ export default function App() {
                       setSpecialistModalOpen(true);
                     }
                   }}
-                  className={`transition-all hover:text-[#bcff48] py-2 px-5 rounded-lg text-center ${
+                  className={`transition-all min-h-[48px] flex items-center justify-center rounded-xl text-center font-semibold active:scale-98 ${
                     link.href === '#contacto'
-                      ? 'bg-[#bcff48] text-black font-extrabold px-6 py-2.5 rounded-full hover:bg-[#a6ea34] shadow-lg mt-2'
-                      : 'text-white/90 hover:text-white'
+                      ? 'bg-[#bcff48] text-black font-extrabold px-6 py-3.5 shadow-[0_0_20px_rgba(188,255,72,0.3)] mt-2'
+                      : 'bg-white/5 hover:bg-white/10 text-white/90 hover:text-white py-3 px-4 border border-white/10'
                   }`}
                 >
                   {link.label}
@@ -1203,8 +1291,19 @@ export default function App() {
               ))}
             </nav>
 
-            <div className="pt-4 border-t border-white/10 text-center">
-              <p className="text-xs text-white/50 section-copy">
+            <div className="pt-4 border-t border-white/10 flex flex-col gap-2 max-w-sm mx-auto w-full">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setSelectedCatalogPlatform('Google Reviews');
+                }}
+                className="w-full min-h-[46px] rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-98 transition-transform"
+              >
+                <span>Ver Catálogos y Tarifas</span>
+                <ArrowRight className="w-4 h-4 text-[#bcff48]" />
+              </button>
+              <p className="text-[11px] text-white/50 text-center mt-1 section-copy">
                 TrustUpReviews™ · Autoridad en Reputación Online
               </p>
             </div>
@@ -1224,24 +1323,32 @@ export default function App() {
           }`}
         >
           {/* CABECERA */}
-          <div className="w-full mb-10 md:mb-14">
-            <div className="section-nav flex flex-wrap items-center justify-between text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-4 md:mb-6 gap-2">
-              <span className="inline-flex items-center gap-1.5 text-[#bcff48] text-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#bcff48]" />
-                Haz clic en cada sección para ver la imagen, catálogo y precios
+          <div className="w-full mb-8 sm:mb-10 md:mb-14">
+            <div className="section-nav flex flex-wrap items-center justify-between text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3 sm:mb-4 gap-2">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest">
+                <Sparkles className="w-3.5 h-3.5 text-[#bcff48]" />
+                <span>Servicios Verificados & Catálogos 2026</span>
+              </span>
+              <span className="text-xs text-white/50 font-mono hidden sm:inline-flex items-center gap-1.5">
+                <span>Toca cualquier catálogo para ver planes y tarifas</span>
               </span>
             </div>
 
-            <h2
-              className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
-              style={{ fontSize: 'clamp(44px, 7vw, 108px)' }}
-            >
-              Servicios disponibles.
-            </h2>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+              <h2
+                className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
+                style={{ fontSize: 'clamp(38px, 6.5vw, 96px)' }}
+              >
+                Servicios disponibles.
+              </h2>
+              <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/70 max-w-md leading-relaxed pb-1">
+                Catálogos especializados con reseñas auténticas y geolocalizadas para posicionar tu marca en las principales plataformas mundiales.
+              </p>
+            </div>
           </div>
 
-          {/* RETÍCULA DE CUATRO PROYECTOS INTERACTIVOS (MÓVIL: DOS COLUMNAS) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-[12px] w-full mt-auto">
+          {/* RETÍCULA DE CUATRO PROYECTOS INTERACTIVOS (MÓVIL ADAPTADO: 1 COLUMNA EN <440PX, 2 COLUMNAS EN TABLET/MÓVIL AMPLIO) */}
+          <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 w-full mt-auto">
             {projects.map((proj) => (
               <div
                 key={proj.title}
@@ -1254,84 +1361,97 @@ export default function App() {
                     setSelectedCatalogPlatform(proj.platform);
                   }
                 }}
-                className="group flex flex-col rounded-[8px] portfolio-card-elevate focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer text-left"
+                className="group relative flex flex-col rounded-2xl overflow-hidden bg-[#0c0d12] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl hover:shadow-[0_16px_40px_rgba(0,0,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer text-left"
               >
-                {/* Panel abstracto de 260 px */}
-                <div
-                  className="h-[260px] w-full rounded-[8px] p-4 flex flex-col justify-between relative overflow-hidden border border-white/10 shadow-lg group-hover:border-white/30 transition-colors"
-                  style={{
-                    background: proj.gradient,
-                  }}
-                >
-                  <div className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/30 via-transparent to-black" />
-                  <div className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full blur-2xl opacity-40 bg-black pointer-events-none" />
+                {/* Showcase fotográfico cinematográfico con zoom suave y scrim oscuro */}
+                <div className="relative h-44 min-[440px]:h-48 sm:h-52 w-full overflow-hidden bg-[#14161f]">
+                  <img
+                    src={proj.image}
+                    alt={proj.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
 
-                  {/* Cabecera del panel */}
-                  <div className="relative z-10 flex items-center justify-between">
-                    <span className="section-copy text-[10px] sm:text-xs font-semibold tracking-wider uppercase px-2.5 py-1 rounded bg-black/60 backdrop-blur-md border border-white/15 text-[#f7f7f2]">
+                  {/* Degradado scrim para contraste visual óptimo */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/50 to-black/35 pointer-events-none" />
+
+                  {/* Resplandor ambiental suave al pasar el cursor */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at 50% 30%, ${proj.accentColor} 0%, transparent 70%)`,
+                    }}
+                  />
+
+                  {/* Badges superiores con efecto glassmorphism */}
+                  <div className="absolute top-3 inset-x-3 z-10 flex items-center justify-between gap-2">
+                    <span className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-white flex items-center gap-1.5 shadow-md">
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: proj.accentColor,
+                          boxShadow: `0 0 8px ${proj.accentColor}`,
+                        }}
+                      />
                       {proj.platform}
                     </span>
                     <span
-                      className="section-copy text-[10px] sm:text-xs font-bold tracking-wider px-2 py-0.5 rounded bg-black/50 text-[#f7f7f2] flex items-center gap-1"
+                      className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 flex items-center gap-1 shadow-md"
                       style={{ color: proj.accentColor }}
                     >
                       <Star className="w-3 h-3 fill-current" />
-                      5.0★
+                      {proj.rating}
                     </span>
                   </div>
 
-                  {/* Vista gráfica visual de la sección */}
-                  <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center py-2">
-                    <div
-                      className="w-12 h-12 rounded-2xl bg-black/50 border border-white/20 flex items-center justify-center text-xl font-extrabold shadow-lg mb-2 group-hover:scale-110 transition-transform"
-                      style={{ color: proj.accentColor }}
-                    >
-                      {proj.platform === 'Google Reviews' && 'G'}
-                      {proj.platform === 'Trustpilot' && '★'}
-                      {proj.platform === 'TripAdvisor' && '◎'}
-                      {proj.platform === 'Facebook' && 'f'}
-                    </div>
-                    <div className="flex text-amber-400 text-xs">
-                      {'★★★★★'.split('').map((s, i) => (
-                        <span key={i}>{s}</span>
-                      ))}
-                    </div>
-                    <span
-                      className="section-copy text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/70 border border-white/15 mt-2 text-[#f7f7f2] group-hover:border-white/40 transition-colors"
-                    >
-                      Ver catálogo y precios →
+                  {/* Badges inferiores sobre la fotografía */}
+                  <div className="absolute bottom-3 inset-x-3 z-10 flex items-center justify-between gap-2">
+                    <span className="text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-white/10 text-white/95 shadow-sm">
+                      {proj.reviewsCount}
                     </span>
-                  </div>
-
-                  {/* Pie del panel con métricas */}
-                  <div className="relative z-10">
-                    <p className="section-copy text-xs font-bold text-[#f7f7f2] tracking-wide mb-0.5">
-                      {proj.metric}
-                    </p>
-                    <p className="section-copy text-[11px] text-[#f7f7f2]/80 font-medium tracking-tight flex items-center justify-between">
-                      <span>{proj.tag}</span>
-                      <span className="text-[10px] text-[#bcff48] font-bold underline sm:hidden">Precios →</span>
-                    </p>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#bcff48]/20 border border-[#bcff48]/40 text-[#bcff48] backdrop-blur-sm hidden min-[440px]:inline-flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      Verificado
+                    </span>
                   </div>
                 </div>
 
-                {/* Información bajo el panel */}
-                <div className="section-copy pt-3 pb-1 flex flex-col gap-0.5">
-                  <div className="flex items-baseline justify-between text-xs sm:text-sm font-semibold text-[#f7f7f2]">
-                    <span className="tracking-wide group-hover:text-white transition-colors">
+                {/* Contenido descriptivo del catálogo */}
+                <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-3.5 bg-[#0c0d12]">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span
+                        className="text-[11px] uppercase font-mono tracking-wider font-bold"
+                        style={{ color: proj.accentColor }}
+                      >
+                        {proj.subtitle}
+                      </span>
+                      <span className="text-[10px] text-white/40 font-mono hidden min-[440px]:inline">
+                        {proj.tag}
+                      </span>
+                    </div>
+                    <h3 className="section-title text-base sm:text-lg font-bold text-white group-hover:text-white transition-colors leading-snug">
                       {proj.title}
-                    </span>
-                    <span
-                      className="text-[11px] font-bold"
-                      style={{ color: proj.accentColor }}
-                    >
-                      {proj.platform}
+                    </h3>
+                    <p className="section-copy text-xs text-[#f7f7f2]/70 mt-1.5 leading-relaxed line-clamp-2">
+                      {proj.description}
+                    </p>
+                  </div>
+
+                  {/* Métrica de rendimiento / beneficio */}
+                  <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs text-[#f7f7f2]/90">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#bcff48] shrink-0" />
+                      <span className="truncate">{proj.metric}</span>
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] sm:text-xs text-[#f7f7f2]/60 font-medium">
-                    <span>Catálogo de precios disponible</span>
-                    <span className="group-hover:translate-x-1 transition-transform text-[#bcff48] hidden sm:inline">
-                      Abrir →
+
+                  {/* Botón táctil optimizado para mobile y desktop */}
+                  <div className="w-full mt-1 min-h-[44px] py-2.5 px-3.5 rounded-xl bg-white/5 group-hover:bg-[#bcff48]/15 border border-white/10 group-hover:border-[#bcff48]/40 text-xs font-semibold text-[#f7f7f2] group-hover:text-white flex items-center justify-between transition-all">
+                    <span className="font-bold tracking-wide">Ver catálogo y precios</span>
+                    <span className="flex items-center gap-1 text-[#bcff48] font-bold">
+                      <span>Abrir</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </div>
@@ -1661,7 +1781,7 @@ export default function App() {
           </div>
 
           {/* SEGUNDO GRAN CUADRO DESTACADO: ¡TOMA EL CONTROL DE TU REPUTACIÓN ONLINE HOY MISMO! */}
-          <div className="mt-10 md:mt-16 relative rounded-3xl bg-gradient-to-b from-[#181818]/95 via-[#121212]/95 to-[#0b0b0b]/95 border border-white/15 p-6 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-[#bcff48]/40 transition-all duration-300">
+          <div className="mt-10 md:mt-16 relative rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#181818]/95 via-[#121212]/95 to-[#0b0b0b]/95 border border-white/15 p-4 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-[#bcff48]/40 transition-all duration-300">
             {/* Destellos ambientales */}
             <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#bcff48]/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#ff5a42]/5 rounded-full blur-3xl pointer-events-none" />
@@ -1669,19 +1789,19 @@ export default function App() {
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
               {/* LADO IZQUIERDO: Celular grande con persona y efecto tipo video mejorado */}
               <div className="lg:col-span-5 flex flex-col items-center justify-center">
-                <div className="relative w-full max-w-[340px] sm:max-w-[370px]">
+                <div className="relative w-full max-w-[310px] min-[400px]:max-w-[340px] sm:max-w-[370px]">
                   {/* Resplandor exterior del smartphone */}
                   <div className="absolute -inset-2 bg-gradient-to-tr from-[#bcff48]/25 via-white/10 to-[#ff5a42]/25 rounded-[52px] blur-2xl opacity-75 animate-pulse-glow" />
 
                   {/* Carcasa exterior del Celular (Acabado Titanio Oscuro) */}
-                  <div className="relative rounded-[46px] bg-[#1a1a1a] border-[8px] border-[#2c2c2c] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.95),0_0_30px_rgba(188,255,72,0.15)] overflow-hidden">
+                  <div className="relative rounded-[40px] sm:rounded-[46px] bg-[#1a1a1a] border-[6px] sm:border-[8px] border-[#2c2c2c] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.95),0_0_30px_rgba(188,255,72,0.15)] overflow-hidden">
                     {/* Botones físicos laterales */}
                     <div className="absolute -left-2.5 top-24 w-1.5 h-10 bg-[#3d3d3d] rounded-r" />
                     <div className="absolute -left-2.5 top-38 w-1.5 h-10 bg-[#3d3d3d] rounded-r" />
                     <div className="absolute -right-2.5 top-28 w-1.5 h-14 bg-[#3d3d3d] rounded-l" />
 
                     {/* Pantalla del Celular */}
-                    <div className="relative h-[580px] sm:h-[630px] bg-[#0c0f0d] flex flex-col justify-between overflow-hidden">
+                    <div className="relative h-[530px] sm:h-[630px] bg-[#0c0f0d] flex flex-col justify-between overflow-hidden">
                       {/* Fondo de interfaz tecnológica oscura con sutiles resplandores */}
                       <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute top-0 right-0 w-56 h-56 bg-[#bcff48]/10 rounded-full blur-3xl" />
@@ -1917,21 +2037,25 @@ export default function App() {
                       </div>
 
                       {/* Dock inferior del celular con controles de animación */}
-                      <div className="relative z-20 px-4 py-2.5 bg-black/90 border-t border-white/10 flex items-center justify-between">
+                      <div className="relative z-20 px-4 py-2 bg-black/90 border-t border-white/10 flex items-center justify-between">
                         {/* Indicadores de paginación de mensajes de la plataforma activa */}
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                           {PHONE_NOTIFICATIONS.filter((item) => item.category === phoneCategory).map((item) => (
                             <button
                               key={item.id}
                               type="button"
                               onClick={() => setActivePhoneMsgIdx(item.id - 1)}
                               aria-label={`Ver reseña ${item.id}`}
-                              className={`h-1.5 rounded-full transition-all ${
-                                activePhoneMsgIdx === (item.id - 1)
-                                  ? 'w-5 bg-[#bcff48]'
-                                  : 'w-1.5 bg-white/30 hover:bg-white/50'
-                              }`}
-                            />
+                              className="p-2 -m-1 inline-flex items-center justify-center focus-visible:outline-none"
+                            >
+                              <span
+                                className={`h-1.5 rounded-full transition-all block ${
+                                  activePhoneMsgIdx === (item.id - 1)
+                                    ? 'w-5 bg-[#bcff48]'
+                                    : 'w-1.5 bg-white/30 hover:bg-white/50'
+                                }`}
+                              />
+                            </button>
                           ))}
                         </div>
 
@@ -1939,16 +2063,17 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setIsAutoPlayingPhone(!isAutoPlayingPhone)}
-                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-full transition-colors focus-visible:outline-none"
+                          aria-label={isAutoPlayingPhone ? 'Pausar simulación' : 'Reanudar simulación'}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none min-h-[36px]"
                         >
                           {isAutoPlayingPhone ? (
                             <>
-                              <Pause className="w-2.5 h-2.5 text-[#bcff48]" />
+                              <Pause className="w-3 h-3 text-[#bcff48]" />
                               <span>Pausar</span>
                             </>
                           ) : (
                             <>
-                              <Play className="w-2.5 h-2.5 text-[#bcff48]" />
+                              <Play className="w-3 h-3 text-[#bcff48]" />
                               <span>Animar</span>
                             </>
                           )}
@@ -2014,11 +2139,11 @@ export default function App() {
                   </p>
 
                   {/* Botones de acción directa */}
-                  <div className="flex flex-wrap items-center gap-3.5">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setSpecialistModalOpen(true)}
-                      className="section-copy inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                      className="section-copy w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-98"
                     >
                       <MessageSquare className="w-4 h-4" />
                       <span>Hablar con un especialista</span>
@@ -2027,7 +2152,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setSelectedCatalogPlatform('Google Reviews')}
-                      className="section-copy inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                      className="section-copy w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-98"
                     >
                       <span>Ver catálogo de precios</span>
                       <ArrowRight className="w-4 h-4" />
@@ -2464,7 +2589,7 @@ export default function App() {
       <FaqSection onOpenSpecialist={() => setSpecialistModalOpen(true)} />
 
       {/* SECCIÓN 9: CONTACTO Y ASESORÍA PERSONALIZADA */}
-      <section id="contacto" className="relative py-20 sm:py-24 bg-gradient-to-b from-[#040507] via-black to-black border-t border-white/10 text-white">
+      <section id="contacto" className="relative py-20 sm:py-24 pb-28 lg:pb-24 bg-gradient-to-b from-[#040507] via-black to-black border-t border-white/10 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest uppercase mb-4">
             <Sparkles className="w-3.5 h-3.5" />
@@ -2510,13 +2635,13 @@ export default function App() {
         </div>
       </section>
 
-      {/* MODAL CATÁLOGO DE PRECIOS */}
+      {/* MODAL CATÁLOGO DE PRECIOS (ADAPTADO A MÓVILES COMO BOTTOM-SHEET) */}
       {selectedCatalogPlatform && activeCatalog && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`Catálogo de precios para ${activeCatalog.platform}`}
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md overflow-y-auto animate-hero-entrance"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md overflow-y-auto animate-hero-entrance"
         >
           {/* Fondo para cerrar al hacer clic afuera */}
           <div
@@ -2525,7 +2650,7 @@ export default function App() {
           />
 
           {/* Contenedor principal del catálogo */}
-          <div className="relative z-10 w-full max-w-5xl bg-[#141414] border border-white/15 rounded-xl shadow-2xl p-5 sm:p-7 md:p-9 my-auto max-h-[92vh] overflow-y-auto">
+          <div className="relative z-10 w-full max-w-5xl bg-[#141414] border-t sm:border border-white/15 rounded-t-3xl sm:rounded-2xl shadow-2xl p-4 sm:p-7 md:p-9 max-sm:max-h-[92vh] my-0 sm:my-auto max-h-[92vh] overflow-y-auto overscroll-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             {/* Cabecera del modal */}
             <div className="flex items-start justify-between gap-4 pb-6 border-b border-white/10">
               <div>
@@ -2552,11 +2677,11 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Botón de cierre */}
+              {/* Botón de cierre ergonómico */}
               <button
                 type="button"
                 onClick={() => setSelectedCatalogPlatform(null)}
-                className="p-2 rounded-full bg-white/5 hover:bg-white/15 text-[#f7f7f2] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-[#f7f7f2] hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] shrink-0 active:scale-95"
                 aria-label="Cerrar catálogo"
               >
                 <X className="w-6 h-6" />
@@ -2564,7 +2689,7 @@ export default function App() {
             </div>
 
             {/* Selector de plataforma para alternar rápido entre catálogos */}
-            <div className="flex items-center gap-2 overflow-x-auto py-4 border-b border-white/10">
+            <div className="flex items-center gap-2 overflow-x-auto py-4 border-b border-white/10 no-scrollbar touch-pan-x -mx-4 px-4 sm:mx-0 sm:px-0">
               <span className="section-copy text-xs text-[#f7f7f2]/50 uppercase tracking-wider font-semibold whitespace-nowrap mr-1">
                 Ver otra plataforma:
               </span>
@@ -2573,7 +2698,7 @@ export default function App() {
                   key={plat}
                   type="button"
                   onClick={() => setSelectedCatalogPlatform(plat)}
-                  className={`section-copy text-xs font-semibold px-3 py-1.5 rounded-full transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] ${
+                  className={`section-copy text-xs font-semibold px-4 py-2 min-h-[38px] flex items-center justify-center rounded-full transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-95 ${
                     selectedCatalogPlatform === plat
                       ? 'bg-white text-black shadow-md'
                       : 'bg-white/5 text-[#f7f7f2]/70 hover:bg-white/10 hover:text-white border border-white/10'
@@ -2647,7 +2772,7 @@ export default function App() {
                     </ul>
                   </div>
 
-                  {/* Botón para solicitar paquete */}
+                  {/* Botón para solicitar paquete con tamaño táctil de 46px */}
                   <button
                     type="button"
                     onClick={() =>
@@ -2657,7 +2782,7 @@ export default function App() {
                         price: plan.price,
                       })
                     }
-                    className={`section-copy w-full py-2.5 px-4 rounded-md text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] ${
+                    className={`section-copy w-full min-h-[46px] py-3 px-4 rounded-xl text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-98 ${
                       plan.popular
                         ? 'bg-[#bcff48] text-black hover:bg-[#a9eb38] shadow-md hover:shadow-lg'
                         : 'bg-white text-black hover:bg-stone-200'
@@ -2692,7 +2817,7 @@ export default function App() {
           aria-modal="true"
           className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-hero-entrance"
         >
-          <div className="relative w-full max-w-md bg-[#161616] border border-[#bcff48]/40 rounded-xl p-6 sm:p-7 shadow-2xl text-center">
+          <div className="relative w-full max-w-md bg-[#161616] border border-[#bcff48]/40 rounded-2xl p-6 sm:p-7 shadow-2xl text-center pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <div className="w-12 h-12 rounded-full bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center mx-auto mb-4 border border-[#bcff48]/30">
               <Check className="w-6 h-6" />
             </div>
@@ -2716,14 +2841,14 @@ export default function App() {
                   setSelectedPlanSuccess(null);
                   setSelectedCatalogPlatform(null);
                 }}
-                className="section-copy w-full py-3 rounded-md bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a8eb37] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                className="section-copy w-full min-h-[46px] py-3 rounded-xl bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a8eb37] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-98"
               >
                 Confirmar y Cerrar
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedPlanSuccess(null)}
-                className="section-copy w-full py-2 text-xs text-[#f7f7f2]/70 hover:text-white transition-colors"
+                className="section-copy w-full min-h-[40px] py-2 text-xs text-[#f7f7f2]/70 hover:text-white transition-colors"
               >
                 Volver a la lista de precios
               </button>
@@ -2732,20 +2857,20 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL DE CONTACTO CON ESPECIALISTAS */}
+      {/* MODAL DE CONTACTO CON ESPECIALISTAS (ADAPTADO A MÓVILES COMO BOTTOM-SHEET) */}
       {specialistModalOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Contactar con un especialista en reputación"
-          className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-hero-entrance"
+          className="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-0 sm:p-5 bg-black/85 backdrop-blur-md animate-hero-entrance overflow-y-auto"
         >
           <div
             className="fixed inset-0"
             onClick={() => setSpecialistModalOpen(false)}
           />
 
-          <div className="relative z-10 w-full max-w-lg bg-[#141414] border border-[#bcff48]/40 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
+          <div className="relative z-10 w-full max-w-lg bg-[#141414] border-t sm:border border-[#bcff48]/40 rounded-t-3xl sm:rounded-2xl p-5 sm:p-8 shadow-2xl max-sm:max-h-[92vh] my-0 sm:my-auto max-h-[92vh] overflow-y-auto overscroll-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <div className="flex items-start justify-between pb-4 border-b border-white/10 mb-5">
               <div>
                 <span className="section-copy text-[11px] font-bold text-[#bcff48] uppercase tracking-wider">
@@ -2758,7 +2883,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setSpecialistModalOpen(false)}
-                className="p-2 rounded-full bg-white/5 hover:bg-white/15 text-white/70 hover:text-white transition-colors"
+                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all active:scale-95 shrink-0"
                 aria-label="Cerrar modal"
               >
                 <X className="w-5 h-5" />
@@ -2782,7 +2907,7 @@ export default function App() {
                     setSpecialistSuccess(false);
                     setSpecialistModalOpen(false);
                   }}
-                  className="section-copy w-full py-3 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a9eb38] transition-all"
+                  className="section-copy w-full min-h-[48px] py-3 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a9eb38] transition-all active:scale-98"
                 >
                   Entendido
                 </button>
@@ -2796,56 +2921,70 @@ export default function App() {
                 className="space-y-4"
               >
                 <div>
-                  <label className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
-                    Tu nombre o nombre del responsable
+                  <label htmlFor="specialist-name" className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
+                    Tu nombre o nombre del responsable <span className="text-[#bcff48]">*</span>
                   </label>
                   <input
+                    id="specialist-name"
+                    name="name"
                     type="text"
                     required
+                    aria-required="true"
+                    autoComplete="name"
                     value={specialistForm.name}
                     onChange={(e) => setSpecialistForm({ ...specialistForm, name: e.target.value })}
                     placeholder="Ej. Roberto Sánchez"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
+                    className="w-full min-h-[46px] px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-base sm:text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
-                      Nombre de la empresa o marca
+                    <label htmlFor="specialist-business" className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
+                      Nombre de la empresa o marca <span className="text-[#bcff48]">*</span>
                     </label>
                     <input
+                      id="specialist-business"
+                      name="organization"
                       type="text"
                       required
+                      aria-required="true"
+                      autoComplete="organization"
                       value={specialistForm.business}
                       onChange={(e) => setSpecialistForm({ ...specialistForm, business: e.target.value })}
                       placeholder="Ej. Mi Negocio SL"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-base sm:text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
-                      Teléfono o WhatsApp
+                    <label htmlFor="specialist-phone" className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
+                      Teléfono o WhatsApp <span className="text-[#bcff48]">*</span>
                     </label>
                     <input
+                      id="specialist-phone"
+                      name="tel"
                       type="tel"
                       required
+                      aria-required="true"
+                      autoComplete="tel"
                       value={specialistForm.phone}
                       onChange={(e) => setSpecialistForm({ ...specialistForm, phone: e.target.value })}
                       placeholder="+34 600 000 000"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/15 text-white text-base sm:text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
+                  <label htmlFor="specialist-platform" className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
                     Plataforma prioritaria
                   </label>
                   <select
+                    id="specialist-platform"
+                    name="platform"
                     value={specialistForm.platform}
                     onChange={(e) => setSpecialistForm({ ...specialistForm, platform: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#1a1a1a] border border-white/15 text-white text-xs focus:border-[#bcff48] focus:outline-none"
+                    className="w-full min-h-[46px] px-3.5 py-2.5 rounded-lg bg-[#1a1a1a] border border-white/15 text-white text-base sm:text-xs focus:border-[#bcff48] focus:outline-none"
                   >
                     <option value="Google Reviews">Google Reviews (Google Maps & Search)</option>
                     <option value="Trustpilot">Trustpilot (TrustScore & Tiendas)</option>
@@ -2856,21 +2995,23 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
+                  <label htmlFor="specialist-notes" className="block section-copy text-xs font-semibold text-[#f7f7f2]/80 mb-1.5">
                     ¿Cuál es tu objetivo o situación actual? (Opcional)
                   </label>
                   <textarea
+                    id="specialist-notes"
+                    name="notes"
                     rows={2}
                     value={specialistForm.notes}
                     onChange={(e) => setSpecialistForm({ ...specialistForm, notes: e.target.value })}
                     placeholder="Ej. Queremos subir a 4.9 estrellas y eliminar 2 reseñas injustas..."
-                    className="w-full px-3.5 py-2 rounded-lg bg-black/50 border border-white/15 text-white text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none resize-none"
+                    className="w-full px-3.5 py-2 rounded-lg bg-black/50 border border-white/15 text-white text-base sm:text-xs placeholder:text-white/30 focus:border-[#bcff48] focus:outline-none resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="section-copy w-full py-3 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a9eb38] transition-all flex items-center justify-center gap-2 shadow-lg"
+                  className="section-copy w-full min-h-[48px] py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a9eb38] transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>Solicitar Asesoría Inmediata</span>
@@ -2882,6 +3023,28 @@ export default function App() {
               </form>
             )}
           </div>
+        </div>
+      )}
+
+      {/* BARRA DE ACCIÓN FLOTANTE PARA MÓVILES (THUMB-FIRST CON SOPORTE DE SAFE AREAS) */}
+      {scrollProgress > 0.15 && !mobileMenuOpen && !selectedCatalogPlatform && !specialistModalOpen && (
+        <div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(0.85rem,env(safe-area-inset-bottom))] bg-black/90 backdrop-blur-xl border-t border-white/15 lg:hidden flex items-center gap-3 animate-hero-entrance shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
+          <button
+            type="button"
+            onClick={() => setSelectedCatalogPlatform('Google Reviews')}
+            className="section-copy flex-1 min-h-[46px] py-3 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider border border-white/20 text-center active:scale-95 transition-transform flex items-center justify-center gap-1.5"
+          >
+            <span>Ver Planes</span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#bcff48]" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setSpecialistModalOpen(true)}
+            className="section-copy flex-1 min-h-[46px] py-3 px-3 rounded-xl bg-[#bcff48] text-black font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(188,255,72,0.35)] text-center flex items-center justify-center gap-2 active:scale-95 transition-transform"
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span>Especialista</span>
+          </button>
         </div>
       )}
     </div>

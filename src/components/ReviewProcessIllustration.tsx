@@ -7,7 +7,12 @@ export const ReviewProcessIllustration: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-tr from-[#00E599]/20 via-[#bcff48]/15 to-transparent rounded-3xl blur-3xl pointer-events-none -z-10" />
 
       {/* Tarjeta contenedora con estética cyber-glass */}
-      <div className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#0f141a] to-[#07090c] border border-white/10 p-4 sm:p-6 shadow-2xl overflow-visible">
+      <div className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#0f141a] to-[#07090c] border border-white/10 hover:border-[#bcff48]/40 p-4 sm:p-6 shadow-2xl overflow-visible transition-all duration-300">
+        {/* Badge interactivo de proceso activo */}
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-[#bcff48]/30 text-[10px] text-[#bcff48] font-mono font-bold tracking-wider backdrop-blur-md shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-[#bcff48] shadow-[0_0_8px_#bcff48] animate-pulse" />
+          <span>PROCESO ACTIVO</span>
+        </div>
         {/* SVG Vectorial de alta definición que reproduce y mejora la imagen del usuario */}
         <svg
           viewBox="0 0 500 520"

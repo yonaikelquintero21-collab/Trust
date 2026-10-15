@@ -16,6 +16,7 @@ import {
   Star,
   Users
 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 interface FaqSectionProps {
   onOpenSpecialist?: () => void;
@@ -238,94 +239,97 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ENCABEZADO CENTRADO: PREGUNTAS FRECUENTES + IMPORTANCIA DE LAS RESEÑAS DE TRUSTPILOT */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
-          {/* Badge superior */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00b67a]/10 border border-[#00b67a]/30 text-[#00b67a] text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-sm mb-5 backdrop-blur-md">
-            <HelpCircle className="w-4 h-4 text-[#00b67a] animate-pulse" />
-            <span>CENTRO DE CONOCIMIENTO & RESPUESTAS CLAVE</span>
-          </div>
+        <ScrollReveal direction="up" distance={25}>
+          <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
+            {/* Badge superior */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00b67a]/10 border border-[#00b67a]/30 text-[#00b67a] text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-sm mb-5 backdrop-blur-md">
+              <HelpCircle className="w-4 h-4 text-[#00b67a] animate-pulse" />
+              <span>CENTRO DE CONOCIMIENTO & RESPUESTAS CLAVE</span>
+            </div>
 
-          {/* TÍTULO EN TODO EL CENTRO */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            Preguntas frecuentes
-          </h2>
+            {/* TÍTULO EN TODO EL CENTRO */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+              Preguntas frecuentes
+            </h2>
 
-          {/* PARTE DE ARRIBA COMO TÍTULO: IMPORTANCIA DE LAS RESEÑAS DE TRUSTPILOT */}
-          <div className="inline-block relative">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#bcff48] pb-2">
-              Importancia de las reseñas de Trustpilot
-            </h3>
-            <div className="h-1 w-24 sm:w-36 mx-auto bg-gradient-to-r from-[#00b67a] to-[#bcff48] rounded-full mb-4" />
-          </div>
+            {/* PARTE DE ARRIBA COMO TÍTULO: IMPORTANCIA DE LAS RESEÑAS DE TRUSTPILOT */}
+            <div className="inline-block relative">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#bcff48] pb-2">
+                Importancia de las reseñas de Trustpilot
+              </h3>
+              <div className="h-1 w-24 sm:w-36 mx-auto bg-gradient-to-r from-[#00b67a] to-[#bcff48] rounded-full mb-4" />
+            </div>
 
-          {/* Párrafo contextual centrado */}
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-            Descubra cómo las reseñas de Trustpilot determinan el éxito comercial de su marca, cómo protegemos su cuenta con perfiles reales y cómo funciona nuestra garantía total de resultados.
-          </p>
+            {/* Párrafo contextual centrado */}
+            <p className="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+              Descubra cómo las reseñas de Trustpilot determinan el éxito comercial de su marca, cómo protegemos su cuenta con perfiles reales y cómo funciona nuestra garantía total de resultados.
+            </p>
 
-          {/* Filtros rápidos y buscador */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900/60 p-2 sm:p-2.5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl">
-            <div className="relative w-full sm:w-72 md:w-80">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Buscar una duda o término..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2.5 min-h-[44px] bg-slate-800/70 border border-slate-700/60 rounded-xl text-base sm:text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
-              />
-              {searchQuery && (
+            {/* Filtros rápidos y buscador */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900/60 p-2 sm:p-2.5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl">
+              <div className="relative w-full sm:w-72 md:w-80">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar una duda o término..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-8 py-2.5 min-h-[44px] bg-slate-800/70 border border-slate-700/60 rounded-xl text-base sm:text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Limpiar búsqueda"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-xs text-slate-400 hover:text-white"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Limpiar búsqueda"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-xs text-slate-400 hover:text-white"
+                  onClick={expandAll}
+                  className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
                 >
-                  ✕
+                  Expandir todas
                 </button>
-              )}
+                <span className="text-slate-700">|</span>
+                <button
+                  type="button"
+                  onClick={collapseAll}
+                  className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
+                >
+                  Colapsar todas
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <button
-                type="button"
-                onClick={expandAll}
-                className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
-              >
-                Expandir todas
-              </button>
-              <span className="text-slate-700">|</span>
-              <button
-                type="button"
-                onClick={collapseAll}
-                className="px-3.5 py-2 min-h-[40px] text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-700 flex items-center justify-center"
-              >
-                Colapsar todas
-              </button>
+            {/* Píldoras de Categorías */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-2 min-h-[38px] text-xs font-semibold rounded-full transition-all border flex items-center justify-center active:scale-95 ${
+                    selectedCategory === cat
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                      : 'bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800/60'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
           </div>
-
-          {/* Píldoras de Categorías */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-2 min-h-[38px] text-xs font-semibold rounded-full transition-all border flex items-center justify-center active:scale-95 ${
-                  selectedCategory === cat
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
-                    : 'bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800/60'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
+        </ScrollReveal>
 
         {/* LISTA DE PREGUNTAS Y RESPUESTAS (ACORDEÓN ROBUSTO) */}
-        <div className="space-y-4 sm:space-y-5">
+        <ScrollReveal direction="up" distance={30} delay={80}>
+          <div className="space-y-4 sm:space-y-5">
           {filteredFaqs.length === 0 ? (
             <div className="text-center py-12 px-4 rounded-2xl bg-slate-900/40 border border-slate-800">
               <FileQuestion className="w-10 h-10 text-slate-500 mx-auto mb-3" />
@@ -437,38 +441,41 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenSpecialist }) => {
               );
             })
           )}
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* BANNER INFERIOR DE ACCIÓN Y CONTACTO */}
-        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-cyan-950/50 border border-emerald-500/30 relative overflow-hidden shadow-2xl">
-          <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-start gap-4 text-center md:text-left">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0 mx-auto md:mx-0">
-                <MessageCircle className="w-6 h-6 text-emerald-400" />
+        <ScrollReveal direction="up" distance={20} delay={150}>
+          <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-cyan-950/50 border border-emerald-500/30 relative overflow-hidden shadow-2xl">
+            <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-start gap-4 text-center md:text-left">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0 mx-auto md:mx-0">
+                  <MessageCircle className="w-6 h-6 text-emerald-400" />
+                </div>
+                <div>
+                  <h4 className="text-lg sm:text-xl font-bold text-white mb-1">
+                    ¿Tiene alguna pregunta específica sobre su marca o sector?
+                  </h4>
+                  <p className="text-slate-300 text-xs sm:text-sm max-w-xl">
+                    Nuestros estrategas senior analizan su perfil de Trustpilot de forma confidencial y diseñan una propuesta de reseñas y reputación a su medida.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="text-lg sm:text-xl font-bold text-white mb-1">
-                  ¿Tiene alguna pregunta específica sobre su marca o sector?
-                </h4>
-                <p className="text-slate-300 text-xs sm:text-sm max-w-xl">
-                  Nuestros estrategas senior analizan su perfil de Trustpilot de forma confidencial y diseñan una propuesta de reseñas y reputación a su medida.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-              <button
-                onClick={onOpenSpecialist}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-[0_4px_20px_rgba(16,185,129,0.3)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>Hablar con un Especialista</span>
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <button
+                  onClick={onOpenSpecialist}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-[0_4px_20px_rgba(16,185,129,0.3)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                  <span>Hablar con un Especialista</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Insignia de Confianza Adicional */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-slate-400">

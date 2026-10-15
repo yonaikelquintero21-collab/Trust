@@ -3,9 +3,9 @@ import { Menu, X, ChevronDown, AlertCircle, Star, Check, ShieldCheck, ArrowRight
 import { ReviewProcessIllustration } from './components/ReviewProcessIllustration';
 import { GuaranteeSection } from './components/GuaranteeSection';
 import { FaqSection } from './components/FaqSection';
-
-const VIDEO_URL = 'https://res.cloudinary.com/syjnvcg3/video/upload/v1792000629/Digital_animation_of_wireframe_s__20261014135631.mp4';
-const POSTER_URL = 'https://res.cloudinary.com/syjnvcg3/video/upload/v1792000629/Digital_animation_of_wireframe_s__20261014135631.jpg';
+import { HeroCinematicBackground } from './components/HeroCinematicBackground';
+import { GlobalCursorAura } from './components/GlobalCursorAura';
+import { ScrollReveal } from './components/ScrollReveal';
 
 interface CatalogPlan {
   id: string;
@@ -727,7 +727,8 @@ function PlatformSectionImage({ platform }: { platform: string }) {
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [videoError, setVideoError] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('inicio');
   const [portfolioVisible, setPortfolioVisible] = useState(false);
 
   // Estado para el catálogo interactivo de precios
@@ -873,73 +874,38 @@ export default function App() {
     };
   }, []);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
   const portfolioRef = useRef<HTMLElement | null>(null);
 
-  // Sincronización de scroll y video optimizada: se ejecuta solo bajo movimiento y se detiene en reposo
+  // Sincronización de scroll optimizada a 60fps para el fondo cinemático interactivo
   useEffect(() => {
     let ticking = false;
-    let rafId: number | null = null;
-    let isMounted = true;
-
-    const prefersReducedMotion =
-      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const stepVideo = () => {
-      const video = videoRef.current;
-      if (!video || video.readyState < 2 || prefersReducedMotion) {
-        rafId = null;
-        return;
-      }
-
-      if (!video.paused) {
-        video.pause();
-      }
-
-      const duration = video.duration && !isNaN(video.duration) ? video.duration : 6;
-      const maxGuideTime = Math.min(duration, 7.5);
-      const targetTime = scrollProgressRef.current * maxGuideTime;
-      const current = video.currentTime;
-      const diff = targetTime - current;
-
-      let keepRunning = false;
-
-      if (scrollProgressRef.current === 0) {
-        if (current > 0.01) {
-          video.currentTime = Math.max(0, current - 0.06);
-          keepRunning = true;
-        } else if (current !== 0) {
-          video.currentTime = 0;
-        }
-      } else if (Math.abs(diff) > 0.02) {
-        video.currentTime = Math.max(0, Math.min(duration, current + diff * 0.16));
-        keepRunning = true;
-      }
-
-      if (isMounted && keepRunning) {
-        rafId = requestAnimationFrame(stepVideo);
-      } else {
-        rafId = null;
-      }
-    };
-
-    const triggerVideoSync = () => {
-      if (rafId === null && isMounted && !prefersReducedMotion) {
-        rafId = requestAnimationFrame(stepVideo);
-      }
-    };
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
+          setIsScrolled(scrollY > 25);
+
           const heroHeight = heroRef.current ? heroRef.current.offsetHeight : window.innerHeight;
-          const progress = Math.min(Math.max(scrollY / (heroHeight * 1.25), 0), 1);
+          const progress = Math.min(Math.max(scrollY / (heroHeight * 1.15), 0), 1);
           setScrollProgress(progress);
           scrollProgressRef.current = progress;
+
+          // Detectar sección activa para iluminar la navegación
+          const sections = ['contacto', 'faq', 'garantia', 'proceso', 'diferenciales', 'nosotros', 'estrategia', 'portfolio', 'inicio'];
+          for (const sec of sections) {
+            const el = document.getElementById(sec);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= 140) {
+                setActiveSection(sec);
+                break;
+              }
+            }
+          }
+
           ticking = false;
-          triggerVideoSync();
         });
         ticking = true;
       }
@@ -947,14 +913,9 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    triggerVideoSync();
 
     return () => {
-      isMounted = false;
       window.removeEventListener('scroll', handleScroll);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
     };
   }, []);
 
@@ -1031,6 +992,8 @@ export default function App() {
       tag: 'Optimización 5 Estrellas',
       rating: '5.0★',
       reviewsCount: '1.420+ reseñas',
+      startingPrice: 'Desde 79 €',
+      features: ['Perfiles locales españoles activos', 'Entrega escalonada y orgánica', 'Garantía oficial de 6 meses'],
       accentColor: '#ff5a42',
       image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
       alt: 'Boutique café con terraza y clientes consultando recomendaciones en Google Maps',
@@ -1046,6 +1009,8 @@ export default function App() {
       tag: 'Verificación Automatizada',
       rating: '4.9★',
       reviewsCount: '2.850+ opiniones',
+      startingPrice: 'Desde 79 €',
+      features: ['Insignia verde "Excelente" oficial', 'Aumento de conversión de compra', 'Protección de dominio y marca'],
       accentColor: '#00b67a',
       image: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=800&q=80',
       alt: 'Experiencia de compra segura y pago verificado en tienda online',
@@ -1061,6 +1026,8 @@ export default function App() {
       tag: 'Prestigio para Viajeros',
       rating: '5.0★',
       reviewsCount: '940+ experiencias',
+      startingPrice: 'Desde 89 €',
+      features: ['Ranking Top 10 en tu ciudad', 'Reseñas para hoteles y restauración', 'Atracción continua de viajeros'],
       accentColor: '#34e0a1',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
       alt: 'Restaurante de alta gastronomía con ambiente cálido galardonado en TripAdvisor',
@@ -1076,6 +1043,8 @@ export default function App() {
       tag: 'Prueba Social Orgánica',
       rating: '100% 👍',
       reviewsCount: '840+ votos',
+      startingPrice: 'Desde 69 €',
+      features: ['Recomendaciones de perfiles reales', 'Impulso directo al ROAS en Meta Ads', 'Respaldo social de marca activa'],
       accentColor: '#1877f2',
       image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
       alt: 'Comunidad de clientes satisfechos compartiendo experiencias y recomendaciones',
@@ -1096,78 +1065,41 @@ export default function App() {
         aria-hidden="true"
       />
 
-      {/* CAPA DE VIDEO GLOBAL CON ZOOM Y GUÍA CONTROLADA EN SCROLL */}
-      <div className="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden bg-black">
-        <video
-          ref={videoRef}
-          src={VIDEO_URL}
-          poster={POSTER_URL}
-          muted
-          playsInline
-          controls={false}
-          onError={() => setVideoError(true)}
-          className={`w-full h-full object-cover object-center will-change-transform transition-opacity duration-1000 ${
-            introDark ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{
-            // Escala suave, lenta y controlada (1.0 a 1.12) al bajar y regresa a 1.0 al subir
-            transform: `scale(${1 + scrollProgress * 0.12}) translate3d(0, ${scrollProgress * 20}px, 0)`,
-            transition: 'transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)',
-          }}
-          aria-hidden="true"
-        />
+      {/* FONDO CINEMATOGRÁFICO INTERACTIVO DE AUTORIDAD Y REPUTACIÓN */}
+      <HeroCinematicBackground scrollProgress={scrollProgress} />
 
-        {videoError && (
-          <div className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-md bg-black/70 border border-white/20 text-xs text-white/80 flex items-center gap-2 backdrop-blur-md">
-            <AlertCircle className="w-4 h-4 text-amber-400" />
-            <span>Archivo de video no disponible</span>
-          </div>
-        )}
+      {/* AURA RADIANTE Y ESTELA DE LUZ DEL CURSOR (EXPERIENCIA DE ALTA GAMA EN DESKTOP) */}
+      <GlobalCursorAura />
 
-        {/* Capa negra dinámica suave: se oscurece con transición lenta y controlada */}
-        <div
-          className="absolute inset-0 bg-black pointer-events-none"
-          style={{
-            opacity: 0.22 + scrollProgress * 0.58,
-            transition: 'opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)',
-          }}
-        />
-      </div>
-
-      {/* SECCIÓN HERO */}
-      <main
-        ref={heroRef}
-        id="inicio"
-        className="relative z-10 w-full min-h-[100svh] flex flex-col justify-between overflow-hidden text-white"
+      {/* HEADER / BARRA DE NAVEGACIÓN FIJA Y PERSISTENTE */}
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-[0_12px_35px_rgba(0,0,0,0.85)] px-4 sm:px-6 md:px-12 ${
+          headerLettersVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        } py-2.5 sm:py-3`}
       >
-        {/* CONTENEDOR HERO */}
-        <div className="relative z-10 flex flex-col justify-between min-h-[100svh] w-full">
-          {/* HEADER / BARRA DE NAVEGACIÓN */}
-          <header
-            className={`w-full px-6 md:px-12 py-5 md:py-7 transition-all duration-1000 ease-out ${
-              headerLettersVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-            }`}
-          >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              {/* BRAND / LOGO (SIN CELESTIA) */}
-              <a
-                href="#inicio"
-                className="flex items-center gap-2.5 transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center shadow-[0_0_15px_rgba(188,255,72,0.3)] group-hover:shadow-[0_0_20px_rgba(188,255,72,0.5)] transition-shadow">
-                  <div className="w-full h-full bg-black rounded-[7px] flex items-center justify-center">
-                    <Star className="w-4 h-4 fill-[#bcff48] text-[#bcff48]" />
-                  </div>
+        <div className="max-w-7xl mx-auto flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            {/* BRAND / LOGO */}
+            <a
+              href="#inicio"
+              className="flex items-center gap-2.5 transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center shadow-[0_0_15px_rgba(188,255,72,0.3)] group-hover:shadow-[0_0_20px_rgba(188,255,72,0.5)] transition-shadow">
+                <div className="w-full h-full bg-black rounded-[7px] flex items-center justify-center">
+                  <Star className="w-4 h-4 fill-[#bcff48] text-[#bcff48]" />
                 </div>
-                <span className="section-title text-xl md:text-2xl font-bold tracking-tight text-[#f7f7f2]">
-                  TrustUp<span className="text-[#bcff48]">Reviews</span>
-                </span>
-              </a>
+              </div>
+              <span className="section-title text-xl md:text-2xl font-bold tracking-tight text-[#f7f7f2]">
+                TrustUp<span className="text-[#bcff48]">Reviews</span>
+              </span>
+            </a>
 
-              {/* NAVEGACIÓN CON TODAS LAS SECCIONES */}
-              <div className="flex items-center gap-4 lg:gap-8">
-                <nav className="hidden lg:flex items-center gap-3 xl:gap-5 font-outfit text-[11px] xl:text-xs tracking-wider uppercase text-white/90 text-small-shadow">
-                  {navLinks.map((link) => (
+            {/* NAVEGACIÓN CON TODAS LAS SECCIONES PERSISTENTES EN ESCRITORIO */}
+            <div className="flex items-center gap-3 lg:gap-8">
+              <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2.5 font-outfit text-[11px] xl:text-xs tracking-wider uppercase text-white/90 text-small-shadow">
+                {navLinks.map((link) => {
+                  const isActive = activeSection === link.href.replace('#', '');
+                  return (
                     <a
                       key={link.label}
                       href={link.href}
@@ -1177,29 +1109,73 @@ export default function App() {
                           setSpecialistModalOpen(true);
                         }
                       }}
-                      className={`transition-all hover:text-[#bcff48] focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-sm px-2 py-1 ${
+                      className={`relative transition-all duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-lg px-2.5 py-1.5 ${
                         link.href === '#contacto'
-                          ? 'bg-[#bcff48] text-black font-extrabold px-4 py-1.5 rounded-full hover:bg-[#a6ea34] shadow-[0_0_15px_rgba(188,255,72,0.35)] hover:text-black ml-1'
-                          : ''
+                          ? 'bg-[#bcff48] text-black font-extrabold px-4 py-1.5 rounded-full hover:bg-[#a6ea34] shadow-[0_0_15px_rgba(188,255,72,0.35)] hover:text-black ml-1 active:scale-95'
+                          : isActive
+                          ? 'text-[#bcff48] font-bold bg-white/10'
+                          : 'text-white/80 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      {link.label}
+                      <span>{link.label}</span>
+                      {isActive && link.href !== '#contacto' && (
+                        <span className="absolute -bottom-1 inset-x-2 h-[2px] bg-[#bcff48] shadow-[0_0_8px_#bcff48] rounded-full" />
+                      )}
                     </a>
-                  ))}
-                </nav>
+                  );
+                })}
+              </nav>
 
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(true)}
-                  className="lg:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
-                  aria-label="Abrir menú de navegación"
-                  aria-expanded={mobileMenuOpen}
-                >
-                  <Menu className="w-6 h-6 text-white" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(true)}
+                className="lg:hidden p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
+                aria-label="Abrir menú de navegación"
+                aria-expanded={mobileMenuOpen}
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
             </div>
-          </header>
+          </div>
+
+          {/* TIRA DE ACCESO RÁPIDO PARA MÓVILES: TODAS LAS OPCIONES FIJADAS SIEMPRE A MANO */}
+          <div className="lg:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 touch-pan-x">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace('#', '');
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => {
+                    if (link.href === '#contacto') {
+                      e.preventDefault();
+                      setSpecialistModalOpen(true);
+                    }
+                  }}
+                  className={`shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all whitespace-nowrap active:scale-95 ${
+                    link.href === '#contacto'
+                      ? 'bg-[#bcff48] text-black font-extrabold shadow-[0_0_10px_rgba(188,255,72,0.35)]'
+                      : isActive
+                      ? 'bg-white/15 text-[#bcff48] font-bold border border-[#bcff48]/40'
+                      : 'bg-white/5 text-white/80 hover:text-white border border-white/10'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </header>
+
+      {/* SECCIÓN HERO */}
+      <main
+        ref={heroRef}
+        id="inicio"
+        className="relative z-10 w-full min-h-[100svh] flex flex-col justify-between overflow-hidden text-white pt-24 sm:pt-28"
+      >
+        {/* CONTENEDOR HERO */}
+        <div className="relative z-10 flex flex-col justify-between min-h-[calc(100svh-6rem)] w-full">
 
           {/* TÍTULO EN LA PARTE INFERIOR IZQUIERDA: '★ TRUST REVIEWS' QUE APARECE CON ANIMACIÓN CONTROLADA */}
           <div
@@ -1315,147 +1291,181 @@ export default function App() {
       <section
         id="portfolio"
         ref={portfolioRef}
-        className="portfolio-section-container relative z-10 w-full text-[#f7f7f2] flex flex-col justify-between overflow-hidden"
+        className="portfolio-section-container relative z-10 w-full text-[#f7f7f2] overflow-hidden"
       >
         <div
-          className={`w-full max-w-7xl mx-auto flex flex-col justify-between h-full ${
+          className={`w-full max-w-[1380px] mx-auto flex flex-col gap-8 sm:gap-10 ${
             portfolioVisible ? 'animate-portfolio-entrance' : 'opacity-0'
           }`}
         >
-          {/* CABECERA */}
-          <div className="w-full mb-8 sm:mb-10 md:mb-14">
-            <div className="section-nav flex flex-wrap items-center justify-between text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3 sm:mb-4 gap-2">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest">
-                <Sparkles className="w-3.5 h-3.5 text-[#bcff48]" />
-                <span>Servicios Verificados & Catálogos 2026</span>
-              </span>
-              <span className="text-xs text-white/50 font-mono hidden sm:inline-flex items-center gap-1.5">
-                <span>Toca cualquier catálogo para ver planes y tarifas</span>
-              </span>
-            </div>
+          {/* CABECERA CON ANIMACIÓN DE ENTRADA AL DESLIZAR */}
+          <ScrollReveal direction="up" distance={20} duration={650}>
+            <div className="w-full">
+              <div className="section-nav flex flex-wrap items-center justify-between text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3 sm:mb-4 gap-2">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest">
+                  <Sparkles className="w-3.5 h-3.5 text-[#bcff48]" />
+                  <span>Servicios Verificados & Catálogos 2026</span>
+                </span>
+                <span className="text-xs text-white/50 font-mono hidden sm:inline-flex items-center gap-1.5">
+                  <span>Toca cualquier catálogo para ver planes detallados y tarifas</span>
+                </span>
+              </div>
 
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-              <h2
-                className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
-                style={{ fontSize: 'clamp(38px, 6.5vw, 96px)' }}
-              >
-                Servicios disponibles.
-              </h2>
-              <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/70 max-w-md leading-relaxed pb-1">
-                Catálogos especializados con reseñas auténticas y geolocalizadas para posicionar tu marca en las principales plataformas mundiales.
-              </p>
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+                <h2
+                  className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
+                  style={{ fontSize: 'clamp(38px, 6.5vw, 96px)' }}
+                >
+                  Servicios disponibles.
+                </h2>
+                <p className="section-copy text-xs sm:text-sm md:text-base text-[#f7f7f2]/75 max-w-lg leading-relaxed pb-1">
+                  Catálogos especializados con reseñas auténticas y geolocalizadas para blindar y catapultar la reputación de tu marca en las principales plataformas mundiales.
+                </p>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
 
-          {/* RETÍCULA DE CUATRO PROYECTOS INTERACTIVOS (MÓVIL ADAPTADO: 1 COLUMNA EN <440PX, 2 COLUMNAS EN TABLET/MÓVIL AMPLIO) */}
-          <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 w-full mt-auto">
-            {projects.map((proj) => (
-              <div
+          {/* RETÍCULA DE CUATRO PROYECTOS INTERACTIVOS CON ANIMACIÓN ESCALONADA */}
+          <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 w-full">
+            {projects.map((proj, idx) => (
+              <ScrollReveal
                 key={proj.title}
-                tabIndex={0}
-                role="button"
-                onClick={() => setSelectedCatalogPlatform(proj.platform)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedCatalogPlatform(proj.platform);
-                  }
-                }}
-                className="group relative flex flex-col rounded-2xl overflow-hidden bg-[#0c0d12] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl hover:shadow-[0_16px_40px_rgba(0,0,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer text-left"
+                direction="up"
+                distance={35}
+                delay={idx * 110}
+                duration={750}
+                className="h-full"
               >
-                {/* Showcase fotográfico cinematográfico con zoom suave y scrim oscuro */}
-                <div className="relative h-44 min-[440px]:h-48 sm:h-52 w-full overflow-hidden bg-[#14161f]">
-                  <img
-                    src={proj.image}
-                    alt={proj.alt}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-
-                  {/* Degradado scrim para contraste visual óptimo */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/50 to-black/35 pointer-events-none" />
-
-                  {/* Resplandor ambiental suave al pasar el cursor */}
+                <div
+                  tabIndex={0}
+                  role="button"
+                  onClick={() => setSelectedCatalogPlatform(proj.platform)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedCatalogPlatform(proj.platform);
+                    }
+                  }}
+                  className="group relative flex flex-col h-full rounded-3xl overflow-hidden bg-[#0d0e14] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-xl hover:shadow-[0_22px_55px_rgba(0,0,0,0.85)] hover:-translate-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer text-left"
+                >
+                  {/* Resplandor perimetral de acento en hover */}
                   <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20"
                     style={{
-                      background: `radial-gradient(circle at 50% 30%, ${proj.accentColor} 0%, transparent 70%)`,
+                      boxShadow: `inset 0 0 20px ${proj.accentColor}25, 0 0 30px ${proj.accentColor}20`,
+                      borderColor: `${proj.accentColor}60`,
+                      borderWidth: '1px',
                     }}
                   />
 
-                  {/* Badges superiores con efecto glassmorphism */}
-                  <div className="absolute top-3 inset-x-3 z-10 flex items-center justify-between gap-2">
-                    <span className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-white flex items-center gap-1.5 shadow-md">
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{
-                          backgroundColor: proj.accentColor,
-                          boxShadow: `0 0 8px ${proj.accentColor}`,
-                        }}
-                      />
-                      {proj.platform}
-                    </span>
-                    <span
-                      className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 flex items-center gap-1 shadow-md"
-                      style={{ color: proj.accentColor }}
-                    >
-                      <Star className="w-3 h-3 fill-current" />
-                      {proj.rating}
-                    </span>
-                  </div>
+                  {/* Showcase fotográfico cinematográfico con altura ampliada */}
+                  <div className="relative h-52 min-[440px]:h-60 sm:h-64 lg:h-72 w-full overflow-hidden bg-[#14161f]">
+                    <img
+                      src={proj.image}
+                      alt={proj.alt}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                    />
 
-                  {/* Badges inferiores sobre la fotografía */}
-                  <div className="absolute bottom-3 inset-x-3 z-10 flex items-center justify-between gap-2">
-                    <span className="text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-white/10 text-white/95 shadow-sm">
-                      {proj.reviewsCount}
-                    </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#bcff48]/20 border border-[#bcff48]/40 text-[#bcff48] backdrop-blur-sm hidden min-[440px]:inline-flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" />
-                      Verificado
-                    </span>
-                  </div>
-                </div>
+                    {/* Degradado scrim para contraste visual óptimo */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e14] via-[#0d0e14]/50 to-black/40 pointer-events-none" />
 
-                {/* Contenido descriptivo del catálogo */}
-                <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-3.5 bg-[#0c0d12]">
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-1">
+                    {/* Resplandor ambiental suave en el color de la plataforma */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-45 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle at 50% 30%, ${proj.accentColor} 0%, transparent 70%)`,
+                      }}
+                    />
+
+                    {/* Badges superiores con efecto glassmorphism */}
+                    <div className="absolute top-3.5 inset-x-3.5 z-10 flex items-center justify-between gap-2">
+                      <span className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-white flex items-center gap-1.5 shadow-md">
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{
+                            backgroundColor: proj.accentColor,
+                            boxShadow: `0 0 8px ${proj.accentColor}`,
+                          }}
+                        />
+                        {proj.platform}
+                      </span>
                       <span
-                        className="text-[11px] uppercase font-mono tracking-wider font-bold"
+                        className="section-copy text-[10px] sm:text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 flex items-center gap-1 shadow-md"
                         style={{ color: proj.accentColor }}
                       >
-                        {proj.subtitle}
-                      </span>
-                      <span className="text-[10px] text-white/40 font-mono hidden min-[440px]:inline">
-                        {proj.tag}
+                        <Star className="w-3 h-3 fill-current" />
+                        {proj.rating}
                       </span>
                     </div>
-                    <h3 className="section-title text-base sm:text-lg font-bold text-white group-hover:text-white transition-colors leading-snug">
-                      {proj.title}
-                    </h3>
-                    <p className="section-copy text-xs text-[#f7f7f2]/70 mt-1.5 leading-relaxed line-clamp-2">
-                      {proj.description}
-                    </p>
+
+                    {/* Badges inferiores sobre la fotografía: cantidad de opiniones y precio desde */}
+                    <div className="absolute bottom-3.5 inset-x-3.5 z-10 flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-black/85 backdrop-blur-md border border-white/15 text-white shadow-sm">
+                        {proj.reviewsCount}
+                      </span>
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-[#bcff48] text-black shadow-md">
+                        {proj.startingPrice}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Métrica de rendimiento / beneficio */}
-                  <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs text-[#f7f7f2]/90">
-                    <span className="flex items-center gap-1.5 font-medium">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#bcff48] shrink-0" />
-                      <span className="truncate">{proj.metric}</span>
-                    </span>
-                  </div>
+                  {/* Contenido descriptivo del catálogo (ampliado y con viñetas de beneficios) */}
+                  <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 gap-4 bg-[#0d0e14]">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span
+                          className="text-[11px] uppercase font-mono tracking-wider font-bold"
+                          style={{ color: proj.accentColor }}
+                        >
+                          {proj.subtitle}
+                        </span>
+                        <span className="text-[10px] text-white/50 font-mono hidden min-[440px]:inline">
+                          {proj.tag}
+                        </span>
+                      </div>
 
-                  {/* Botón táctil optimizado para mobile y desktop */}
-                  <div className="w-full mt-1 min-h-[44px] py-2.5 px-3.5 rounded-xl bg-white/5 group-hover:bg-[#bcff48]/15 border border-white/10 group-hover:border-[#bcff48]/40 text-xs font-semibold text-[#f7f7f2] group-hover:text-white flex items-center justify-between transition-all">
-                    <span className="font-bold tracking-wide">Ver catálogo y precios</span>
-                    <span className="flex items-center gap-1 text-[#bcff48] font-bold">
-                      <span>Abrir</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </span>
+                      <h3 className="section-title text-lg sm:text-xl font-bold text-white group-hover:text-white transition-colors leading-snug">
+                        {proj.title}
+                      </h3>
+
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 mt-1.5 leading-relaxed line-clamp-2">
+                        {proj.description}
+                      </p>
+
+                      {/* Viñetas destacadas de beneficios clave del catálogo */}
+                      <ul className="space-y-1.5 mt-3 pt-3 border-t border-white/10">
+                        {proj.features.map((feat, idx) => (
+                          <li key={idx} className="flex items-center gap-2 text-xs text-white/85">
+                            <CheckCircle2
+                              className="w-3.5 h-3.5 shrink-0"
+                              style={{ color: proj.accentColor }}
+                            />
+                            <span className="truncate">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Métrica de rendimiento / beneficio */}
+                    <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs text-[#f7f7f2]/90">
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <ShieldCheck className="w-4 h-4 text-[#bcff48] shrink-0" />
+                        <span className="truncate">{proj.metric}</span>
+                      </span>
+                    </div>
+
+                    {/* Botón táctil optimizado con transición de color y escala */}
+                    <div className="w-full mt-1 min-h-[46px] py-2.5 px-4 rounded-xl bg-white/5 group-hover:bg-[#bcff48] border border-white/10 group-hover:border-[#bcff48] text-xs font-semibold text-[#f7f7f2] group-hover:text-black flex items-center justify-between transition-all duration-300 shadow-sm">
+                      <span className="font-bold tracking-wide">Ver catálogo y tarifas</span>
+                      <span className="flex items-center gap-1 text-[#bcff48] group-hover:text-black font-extrabold transition-colors">
+                        <span>Abrir</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -1464,184 +1474,203 @@ export default function App() {
       {/* ESTRATEGIAS Y PILARES DE REPUTACIÓN */}
       <section
         id="estrategia"
-        className="portfolio-section-container relative z-10 w-full text-[#f7f7f2] flex flex-col justify-between overflow-hidden"
+        className="portfolio-section-container relative z-10 w-full text-[#f7f7f2] overflow-hidden"
       >
-        <div className="w-full max-w-7xl mx-auto flex flex-col justify-between h-full py-10 md:py-16">
+        <div className="w-full max-w-[1380px] mx-auto flex flex-col gap-8 sm:gap-10">
           {/* Cabecera */}
-          <div className="w-full mb-10 md:mb-14">
-            <div className="section-nav flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#bcff48]" />
-              <span>Estrategia de Reputación Integral</span>
+          <ScrollReveal direction="up" distance={25}>
+            <div className="w-full">
+              <div className="section-nav flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#bcff48] shadow-[0_0_8px_#bcff48] animate-pulse" />
+                <span>Estrategia de Reputación Integral</span>
+              </div>
+
+              <h2
+                className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
+                style={{ fontSize: 'clamp(38px, 6vw, 92px)' }}
+              >
+                Control y crecimiento de tu reputación.
+              </h2>
             </div>
+          </ScrollReveal>
 
-            <h2
-              className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
-              style={{ fontSize: 'clamp(38px, 6vw, 92px)' }}
-            >
-              Control y crecimiento de tu reputación.
-            </h2>
-          </div>
-
-          {/* 3 CUADROS COLOCADOS CADA UNO AL LADO DEL OTRO (3 COLUMNAS EN ESCRITORIO) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8 w-full mt-auto">
+          {/* 3 CUADROS COLOCADOS CADA UNO AL LADO DEL OTRO (3 COLUMNAS EN ESCRITORIO CON ANIMACIÓN Y RESPLANDOR) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
             {/* CUADRO: Eliminación de revisión */}
-            <div className="group relative flex flex-col justify-between rounded-2xl bg-[#121212]/90 border border-white/10 hover:border-[#ff5a42]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(255,90,66,0.15)]">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#ff5a42] bg-[#ff5a42]/10 border border-[#ff5a42]/20 px-3 py-1 rounded-full">
-                    Defensa Legal & Supresión
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#ff5a42] group-hover:scale-110 transition-transform">
-                    <ShieldCheck className="w-5 h-5" />
+            <ScrollReveal direction="up" distance={30} delay={0}>
+              <div className="group relative flex flex-col justify-between h-full rounded-3xl bg-[#121212]/90 border border-white/10 hover:border-[#ff5a42]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_16px_45px_rgba(255,90,66,0.2)] overflow-hidden">
+                {/* Línea lumínica superior animada */}
+                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#ff5a42] to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#ff5a42] bg-[#ff5a42]/10 border border-[#ff5a42]/25 px-3 py-1 rounded-full">
+                      Defensa Legal & Supresión
+                    </span>
+                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#ff5a42] group-hover:scale-110 group-hover:bg-[#ff5a42]/15 transition-all shadow-sm">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
                   </div>
+
+                  <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#ff5a42] transition-colors">
+                    Eliminación de revisión
+                  </h3>
+
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
+                    Gestión experta y desindexación legal de valoraciones falsas, dañinas o difamatorias en Google Maps, Trustpilot, TripAdvisor y Facebook. Aplicamos el marco normativo de cada plataforma para remover opiniones injustas que dañan la facturación y prestigio de tu empresa.
+                  </p>
+
+                  <ul className="section-copy space-y-2.5 mb-6">
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
+                      <span>Eliminación de ataques de 1 estrella sin compra real</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
+                      <span>Apelación directa y resolución ante los equipos de soporte</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
+                      <span>Blindaje continuo contra difamación de competidores</span>
+                    </li>
+                  </ul>
                 </div>
 
-                <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#ff5a42] transition-colors">
-                  Eliminación de revisión
-                </h3>
-
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
-                  Gestión experta y desindexación legal de valoraciones falsas, dañinas o difamatorias en Google Maps, Trustpilot, TripAdvisor y Facebook. Aplicamos el marco normativo de cada plataforma para remover opiniones injustas que dañan la facturación y prestigio de tu empresa.
-                </p>
-
-                <ul className="section-copy space-y-2.5 mb-6">
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
-                    <span>Eliminación de ataques de 1 estrella sin compra real</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
-                    <span>Apelación directa y resolución ante los equipos de soporte</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#ff5a42] shrink-0 mt-0.5" />
-                    <span>Blindaje continuo contra difamación de competidores</span>
-                  </li>
-                </ul>
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="section-copy text-xs text-[#f7f7f2]/50">Tasa de éxito</span>
+                  <span className="section-copy text-xs font-bold text-[#ff5a42] bg-[#ff5a42]/10 px-2.5 py-1 rounded-full border border-[#ff5a42]/20">
+                    ★ 94% Resoluciones favorables
+                  </span>
+                </div>
               </div>
-
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="section-copy text-xs text-[#f7f7f2]/50">Tasa de éxito</span>
-                <span className="section-copy text-xs font-bold text-[#ff5a42] bg-[#ff5a42]/10 px-2.5 py-1 rounded">
-                  94% Resoluciones favorables
-                </span>
-              </div>
-            </div>
+            </ScrollReveal>
 
             {/* CUADRO: Mejorar la credibilidad de la marca */}
-            <div className="group relative flex flex-col justify-between rounded-2xl bg-[#121212]/90 border border-white/10 hover:border-[#bcff48]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(188,255,72,0.15)]">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#bcff48] bg-[#bcff48]/10 border border-[#bcff48]/20 px-3 py-1 rounded-full">
-                    Autoridad & Prestigio 5★
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#bcff48] group-hover:scale-110 transition-transform">
-                    <Star className="w-5 h-5 fill-current" />
+            <ScrollReveal direction="up" distance={30} delay={120}>
+              <div className="group relative flex flex-col justify-between h-full rounded-3xl bg-[#121212]/90 border border-white/10 hover:border-[#bcff48]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_16px_45px_rgba(188,255,72,0.2)] overflow-hidden">
+                {/* Línea lumínica superior animada */}
+                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#bcff48] to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#bcff48] bg-[#bcff48]/10 border border-[#bcff48]/25 px-3 py-1 rounded-full">
+                      Autoridad & Prestigio 5★
+                    </span>
+                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#bcff48] group-hover:scale-110 group-hover:bg-[#bcff48]/15 transition-all shadow-sm">
+                      <Star className="w-5 h-5 fill-current" />
+                    </div>
                   </div>
+
+                  <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#bcff48] transition-colors">
+                    Mejorar la credibilidad de la marca
+                  </h3>
+
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
+                    Transformamos la percepción pública de tu negocio creando un flujo constante de testimonios 5 estrellas con perfiles verificados y geolocalizados. La confianza visual inmediata impulsa la tasa de conversión y sitúa tu marca como líder indiscutible en su sector.
+                  </p>
+
+                  <ul className="section-copy space-y-2.5 mb-6">
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
+                      <span>Insignias de excelencia y puntuaciones medias de 4.8 a 5.0★</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
+                      <span>Textos estratégicos con palabras clave de alto impacto</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
+                      <span>Incremento directo en clics, llamadas y pedidos</span>
+                    </li>
+                  </ul>
                 </div>
 
-                <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#bcff48] transition-colors">
-                  Mejorar la credibilidad de la marca
-                </h3>
-
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
-                  Transformamos la percepción pública de tu negocio creando un flujo constante de testimonios 5 estrellas con perfiles verificados y geolocalizados. La confianza visual inmediata impulsa la tasa de conversión y sitúa tu marca como líder indiscutible en su sector.
-                </p>
-
-                <ul className="section-copy space-y-2.5 mb-6">
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Insignias de excelencia y puntuaciones medias de 4.8 a 5.0★</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Textos estratégicos con palabras clave de alto impacto</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Incremento directo en clics, llamadas y pedidos</span>
-                  </li>
-                </ul>
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="section-copy text-xs text-[#f7f7f2]/50">Impacto en conversión</span>
+                  <span className="section-copy text-xs font-bold text-[#bcff48] bg-[#bcff48]/10 px-2.5 py-1 rounded-full border border-[#bcff48]/20">
+                    ★ +38% Cierre de ventas
+                  </span>
+                </div>
               </div>
-
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="section-copy text-xs text-[#f7f7f2]/50">Impacto en conversión</span>
-                <span className="section-copy text-xs font-bold text-[#bcff48] bg-[#bcff48]/10 px-2.5 py-1 rounded">
-                  +38% Cierre de ventas
-                </span>
-              </div>
-            </div>
+            </ScrollReveal>
 
             {/* CUADRO: Fidelización Continua (Automatización & Protección) */}
-            <div className="group relative flex flex-col justify-between rounded-2xl bg-[#121212]/90 border border-white/10 hover:border-[#bcff48]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(188,255,72,0.15)]">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#bcff48] bg-[#bcff48]/10 border border-[#bcff48]/20 px-3 py-1 rounded-full">
-                    Fidelización & Captación Continua
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#bcff48] group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-5 h-5" />
+            <ScrollReveal direction="up" distance={30} delay={240}>
+              <div className="group relative flex flex-col justify-between h-full rounded-3xl bg-[#121212]/90 border border-white/10 hover:border-[#00b67a]/60 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_16px_45px_rgba(0,182,122,0.2)] overflow-hidden">
+                {/* Línea lumínica superior animada */}
+                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#00b67a] to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="section-copy text-xs font-bold tracking-widest uppercase text-[#00b67a] bg-[#00b67a]/10 border border-[#00b67a]/25 px-3 py-1 rounded-full">
+                      Fidelización & Captación Continua
+                    </span>
+                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#00b67a] group-hover:scale-110 group-hover:bg-[#00b67a]/15 transition-all shadow-sm">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
                   </div>
+
+                  <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#00b67a] transition-colors">
+                    Captación y blindaje continuo
+                  </h3>
+
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
+                    Automatización inteligente para captar valoraciones positivas en el punto de venta mediante tarjetas NFC y códigos QR. Integra un filtro previo anti-quejas que redirige cualquier insatisfacción de forma privada a tu equipo antes de que llegue a internet.
+                  </p>
+
+                  <ul className="section-copy space-y-2.5 mb-6">
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#00b67a] shrink-0 mt-0.5" />
+                      <span>Dispositivos NFC físicos y links inteligentes de reseña</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
+                      <span>Filtro previo que neutraliza valoraciones negativas</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
+                      <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
+                      <span>Monitorización de reputación y alertas en tiempo real</span>
+                    </li>
+                  </ul>
                 </div>
 
-                <h3 className="section-title text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-[#bcff48] transition-colors">
-                  Mejorar la credibilidad de la marca
-                </h3>
-
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed mb-6">
-                  Automatización inteligente para captar valoraciones positivas en el punto de venta mediante tarjetas NFC y códigos QR. Integra un filtro previo anti-quejas que redirige cualquier insatisfacción de forma privada a tu equipo antes de que llegue a internet.
-                </p>
-
-                <ul className="section-copy space-y-2.5 mb-6">
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Dispositivos NFC físicos y links inteligentes de reseña</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Filtro previo que neutraliza valoraciones negativas</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-xs text-[#f7f7f2]/85">
-                    <Check className="w-4 h-4 text-[#bcff48] shrink-0 mt-0.5" />
-                    <span>Monitorización de reputación y alertas en tiempo real</span>
-                  </li>
-                </ul>
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="section-copy text-xs text-[#f7f7f2]/50">Sistema</span>
+                  <span className="section-copy text-xs font-bold text-[#bcff48] bg-[#bcff48]/10 px-2.5 py-1 rounded">
+                    100% Automatizado
+                  </span>
+                </div>
               </div>
-
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="section-copy text-xs text-[#f7f7f2]/50">Sistema</span>
-                <span className="section-copy text-xs font-bold text-[#bcff48] bg-[#bcff48]/10 px-2.5 py-1 rounded">
-                  100% Automatizado
-                </span>
-              </div>
-            </div>
+            </ScrollReveal>
           </div>
 
           {/* CUADRITO DE GARANTÍA Y ACCIÓN */}
-          <div className="mt-8 md:mt-12 w-full max-w-2xl mx-auto rounded-xl p-5 sm:p-6 bg-[#141414]/90 border border-white/15 hover:border-[#bcff48]/50 transition-all duration-300 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-full bg-[#bcff48]/15 border border-[#bcff48]/30 text-[#bcff48] flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-5 h-5" />
+          <ScrollReveal direction="up" distance={20} delay={150}>
+            <div className="mt-8 md:mt-12 w-full max-w-2xl mx-auto rounded-xl p-5 sm:p-6 bg-[#141414]/90 border border-white/15 hover:border-[#bcff48]/50 transition-all duration-300 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-full bg-[#bcff48]/15 border border-[#bcff48]/30 text-[#bcff48] flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="section-title text-base sm:text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-1.5 justify-center sm:justify-start">
+                    <span className="text-[#bcff48] font-bold">&gt;</span>
+                    <span>Aumente la credibilidad de la marca hoy</span>
+                  </p>
+                  <p className="section-copy text-xs sm:text-sm font-semibold text-[#bcff48] mt-1">
+                    Garantía de devolución del dinero del 100%.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="section-title text-base sm:text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-1.5 justify-center sm:justify-start">
-                  <span className="text-[#bcff48] font-bold">&gt;</span>
-                  <span>Aumente la credibilidad de la marca hoy</span>
-                </p>
-                <p className="section-copy text-xs sm:text-sm font-semibold text-[#bcff48] mt-1">
-                  Garantía de devolución del dinero del 100%.
-                </p>
-              </div>
-            </div>
 
-            <a
-              href="#portfolio"
-              className="section-copy inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-[#bcff48] transition-colors shrink-0 shadow-md"
-            >
-              <span>Ver servicios</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-          </div>
+              <a
+                href="#portfolio"
+                className="section-copy inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-[#bcff48] transition-colors shrink-0 shadow-md"
+              >
+                <span>Ver servicios</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -1652,136 +1681,141 @@ export default function App() {
       >
         <div className="w-full max-w-7xl mx-auto flex flex-col justify-between h-full py-10 md:py-16">
           {/* Cabecera */}
-          <div className="w-full mb-8 md:mb-12">
-            <div className="section-nav flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#bcff48]" />
-              <span>Sobre Nosotros & Liderazgo Global</span>
+          <ScrollReveal direction="up" distance={25}>
+            <div className="w-full mb-8 md:mb-12">
+              <div className="section-nav flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f7f7f2]/75 mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#bcff48]" />
+                <span>Sobre Nosotros & Liderazgo Global</span>
+              </div>
+              <h2
+                className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
+                style={{ fontSize: 'clamp(38px, 6vw, 92px)' }}
+              >
+                Liderazgo global en reputación digital.
+              </h2>
             </div>
-            <h2
-              className="section-title text-[#f7f7f2] font-bold leading-[0.92] tracking-normal text-balance"
-              style={{ fontSize: 'clamp(38px, 6vw, 92px)' }}
-            >
-              Liderazgo global en reputación digital.
-            </h2>
-          </div>
+          </ScrollReveal>
 
           {/* GRAN CUADRO DESTACADO: ¿QUIÉN ES TRUSTUPREVIEWS? */}
-          <div className="relative rounded-3xl bg-gradient-to-b from-[#161616]/95 to-[#0d0d0d]/95 border border-white/15 p-6 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden group hover:border-[#bcff48]/40 transition-all duration-300">
-            {/* Destellos ambientales sutiles */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#bcff48]/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#ff5a42]/5 rounded-full blur-3xl pointer-events-none" />
+          <ScrollReveal direction="up" distance={30} delay={80}>
+            <div className="relative rounded-3xl bg-gradient-to-b from-[#161616]/95 to-[#0d0d0d]/95 border border-white/15 p-6 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden group hover:border-[#bcff48]/40 transition-all duration-300">
+              {/* Destellos ambientales sutiles */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#bcff48]/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#ff5a42]/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              {/* Columna Izquierda (7 columnas): Título y descripción principal */}
-              <div className="lg:col-span-7 flex flex-col">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 w-fit mb-5">
-                  <Star className="w-3.5 h-3.5 fill-[#bcff48] text-[#bcff48]" />
-                  <span className="section-copy text-xs font-bold tracking-[0.2em] uppercase text-[#f7f7f2]">
-                    TrustUpReviews™ Oficial
-                  </span>
-                </div>
-
-                <h3 className="section-title text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                  ¿Quién es TrustUpReviews?
-                </h3>
-
-                <p className="section-copy text-sm sm:text-base md:text-[17px] text-[#f7f7f2]/90 leading-relaxed mb-5 font-normal">
-                  <strong className="text-white font-semibold">TrustUpReviews™</strong> es la marca líder número uno que impulsa el servicio de reseñas para todos los propietarios de marcas de comercio electrónico y negocios locales. Con más de 8 años de experiencia en este panorama, hemos adaptado nuestras soluciones de reseñas para satisfacer el cambiante panorama del comercio electrónico y los negocios, impulsados por clientes positivos en línea.
-                </p>
-
-                <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/75 leading-relaxed mb-8 font-normal">
-                  Con presencia mundial en APAC, Europa y América, brindamos soluciones personalizadas para individuos y empresas de todo el mundo, garantizando una protección integral y el máximo crecimiento de autoridad para tu marca.
-                </p>
-
-                {/* Métricas destacadas en retícula */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-white/10">
-                  <div>
-                    <span className="section-title text-2xl sm:text-3xl font-bold text-[#bcff48] block">
-                      +100K
-                    </span>
-                    <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
-                      Empresas impulsadas
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                {/* Columna Izquierda (7 columnas): Título y descripción principal */}
+                <div className="lg:col-span-7 flex flex-col">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 w-fit mb-5">
+                    <Star className="w-3.5 h-3.5 fill-[#bcff48] text-[#bcff48]" />
+                    <span className="section-copy text-xs font-bold tracking-[0.2em] uppercase text-[#f7f7f2]">
+                      TrustUpReviews™ Oficial
                     </span>
                   </div>
-                  <div>
-                    <span className="section-title text-2xl sm:text-3xl font-bold text-white block">
-                      +8 Años
-                    </span>
-                    <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
-                      Liderazgo global
-                    </span>
-                  </div>
-                  <div>
-                    <span className="section-title text-2xl sm:text-3xl font-bold text-[#bcff48] block">
-                      99.4%
-                    </span>
-                    <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
-                      Satisfacción cliente
-                    </span>
-                  </div>
-                  <div>
-                    <span className="section-title text-2xl sm:text-3xl font-bold text-white block">
-                      24/7
-                    </span>
-                    <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
-                      Monitorización VIP
-                    </span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Columna Derecha (5 columnas): Tarjetas de pilares de valor añadido */}
-              <div className="lg:col-span-5 flex flex-col gap-4">
-                {/* Pilar 1: Fuerte presencia */}
-                <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-[#bcff48]/15 border border-[#bcff48]/30 text-[#bcff48] flex items-center justify-center shrink-0">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <h4 className="section-title text-lg font-bold text-white">
-                      Fuerte presencia global
-                    </h4>
-                  </div>
-                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                    Ayudamos a más de 100.000+ empresas en todo el mundo a aumentar la confianza en su marca con resultados probados y medibles.
+                  <h3 className="section-title text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                    ¿Quién es TrustUpReviews?
+                  </h3>
+
+                  <p className="section-copy text-sm sm:text-base md:text-[17px] text-[#f7f7f2]/90 leading-relaxed mb-5 font-normal">
+                    <strong className="text-white font-semibold">TrustUpReviews™</strong> es la marca líder número uno que impulsa el servicio de reseñas para todos los propietarios de marcas de comercio electrónico y negocios locales. Con más de 8 años de experiencia en este panorama, hemos adaptado nuestras soluciones de reseñas para satisfacer el cambiante panorama del comercio electrónico y los negocios, impulsados por clientes positivos en línea.
                   </p>
+
+                  <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/75 leading-relaxed mb-8 font-normal">
+                    Con presencia mundial en APAC, Europa y América, brindamos soluciones personalizadas para individuos y empresas de todo el mundo, garantizando una protección integral y el máximo crecimiento de autoridad para tu marca.
+                  </p>
+
+                  {/* Métricas destacadas en retícula */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-white/10">
+                    <div>
+                      <span className="section-title text-2xl sm:text-3xl font-bold text-[#bcff48] block">
+                        +100K
+                      </span>
+                      <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
+                        Empresas impulsadas
+                      </span>
+                    </div>
+                    <div>
+                      <span className="section-title text-2xl sm:text-3xl font-bold text-white block">
+                        +8 Años
+                      </span>
+                      <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
+                        Liderazgo global
+                      </span>
+                    </div>
+                    <div>
+                      <span className="section-title text-2xl sm:text-3xl font-bold text-[#bcff48] block">
+                        99.4%
+                      </span>
+                      <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
+                        Satisfacción cliente
+                      </span>
+                    </div>
+                    <div>
+                      <span className="section-title text-2xl sm:text-3xl font-bold text-white block">
+                        24/7
+                      </span>
+                      <span className="section-copy text-xs text-[#f7f7f2]/70 font-medium">
+                        Monitorización VIP
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Pilar 2: Soluciones innovadoras */}
-                <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-[#ff5a42]/15 border border-[#ff5a42]/30 text-[#ff5a42] flex items-center justify-center shrink-0">
-                      <Zap className="w-5 h-5" />
+                {/* Columna Derecha (5 columnas): Tarjetas de pilares de valor añadido */}
+                <div className="lg:col-span-5 flex flex-col gap-4">
+                  {/* Pilar 1: Fuerte presencia */}
+                  <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-[#bcff48]/15 border border-[#bcff48]/30 text-[#bcff48] flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-5 h-5" />
+                      </div>
+                      <h4 className="section-title text-lg font-bold text-white">
+                        Fuerte presencia global
+                      </h4>
                     </div>
-                    <h4 className="section-title text-lg font-bold text-white">
-                      Soluciones innovadoras
-                    </h4>
+                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
+                      Ayudamos a más de 100.000+ empresas en todo el mundo a aumentar la confianza en su marca con resultados probados y medibles.
+                    </p>
                   </div>
-                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                    Estrategias avanzadas y tecnología propietaria que se adaptan permanentemente al cambiante panorama empresarial y algorítmico.
-                  </p>
-                </div>
 
-                {/* Pilar 3: Garantía incondicional */}
-                <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center shrink-0">
-                      <Sparkles className="w-5 h-5 text-[#bcff48]" />
+                  {/* Pilar 2: Soluciones innovadoras */}
+                  <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-[#ff5a42]/15 border border-[#ff5a42]/30 text-[#ff5a42] flex items-center justify-center shrink-0">
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      <h4 className="section-title text-lg font-bold text-white">
+                        Soluciones innovadoras
+                      </h4>
                     </div>
-                    <h4 className="section-title text-lg font-bold text-white">
-                      Garantía por escrito
-                    </h4>
+                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
+                      Estrategias avanzadas y tecnología propietaria que se adaptan permanentemente al cambiante panorama empresarial y algorítmico.
+                    </p>
                   </div>
-                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                    Entrega orgánica, perfiles 100% verificados y reposición asegurada para blindar la reputación de tu negocio sin riesgos.
-                  </p>
+
+                  {/* Pilar 3: Garantía incondicional */}
+                  <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center shrink-0">
+                        <Sparkles className="w-5 h-5 text-[#bcff48]" />
+                      </div>
+                      <h4 className="section-title text-lg font-bold text-white">
+                        Garantía por escrito
+                      </h4>
+                    </div>
+                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
+                      Entrega orgánica, perfiles 100% verificados y reposición asegurada para blindar la reputación de tu negocio sin riesgos.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* SEGUNDO GRAN CUADRO DESTACADO: ¡TOMA EL CONTROL DE TU REPUTACIÓN ONLINE HOY MISMO! */}
-          <div className="mt-10 md:mt-16 relative rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#181818]/95 via-[#121212]/95 to-[#0b0b0b]/95 border border-white/15 p-4 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-[#bcff48]/40 transition-all duration-300">
+          <ScrollReveal direction="up" distance={30} delay={120}>
+            <div className="mt-10 md:mt-16 relative rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#181818]/95 via-[#121212]/95 to-[#0b0b0b]/95 border border-white/15 p-4 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-[#bcff48]/40 transition-all duration-300">
             {/* Destellos ambientales */}
             <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#bcff48]/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#ff5a42]/5 rounded-full blur-3xl pointer-events-none" />
@@ -2178,7 +2212,8 @@ export default function App() {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
+      </div>
       </section>
 
       {/* SECCIÓN: EN QUÉ SOMOS DIFERENTES */}
@@ -2191,241 +2226,245 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             {/* LADO IZQUIERDO: TÍTULO Y TEXTO SOLICITADO */}
             <div className="lg:col-span-5 flex flex-col justify-start">
-              {/* Etiqueta superior */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-[11px] font-mono font-bold tracking-widest uppercase mb-4 self-start">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>VENTAJA EXCLUSIVA · TRUSTUPREVIEWS™</span>
-              </div>
+              <ScrollReveal direction="up" distance={30}>
+                {/* Etiqueta superior */}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-[11px] font-mono font-bold tracking-widest uppercase mb-4 self-start">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>VENTAJA EXCLUSIVA · TRUSTUPREVIEWS™</span>
+                </div>
 
-              {/* Título en el lado izquierdo */}
-              <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-[1.05] mb-6">
-                En qué somos diferentes
-              </h2>
+                {/* Título en el lado izquierdo */}
+                <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-[1.05] mb-6">
+                  En qué somos diferentes
+                </h2>
 
-              {/* Párrafo solicitado en el lado izquierdo */}
-              <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 mb-6">
-                <p className="section-copy text-base sm:text-[17px] text-[#f7f7f2]/90 leading-relaxed font-normal">
-                  <strong className="text-white font-semibold">TrustUpReviews™</strong> es la autoridad líder en gestión de reputación. Tenemos un enfoque único que combina la eliminación de reseñas negativas y la gestión de la reputación en una solución eficaz. Nuestra reputación Los especialistas/software pueden ayudarle a eliminar lo siguiente:
-                </p>
-              </div>
+                {/* Párrafo solicitado en el lado izquierdo */}
+                <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 mb-6">
+                  <p className="section-copy text-base sm:text-[17px] text-[#f7f7f2]/90 leading-relaxed font-normal">
+                    <strong className="text-white font-semibold">TrustUpReviews™</strong> es la autoridad líder en gestión de reputación. Tenemos un enfoque único que combina la eliminación de reseñas negativas y la gestión de la reputación en una solución eficaz. Nuestra reputación Los especialistas/software pueden ayudarle a eliminar lo siguiente:
+                  </p>
+                </div>
 
-              {/* Beneficios diferenciales clave de nuestro software y especialistas */}
-              <div className="space-y-3.5 mb-8">
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <ShieldCheck className="w-4 h-4 text-[#bcff48]" />
+                {/* Beneficios diferenciales clave de nuestro software y especialistas */}
+                <div className="space-y-3.5 mb-8">
+                  <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <ShieldCheck className="w-4 h-4 text-[#bcff48]" />
+                    </div>
+                    <div>
+                      <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+                        Eliminación Permanente y Legal
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
+                        Sin prácticas inseguras. Tramitamos solicitudes oficiales basadas en normativas legales y términos de cada plataforma.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-                      Eliminación Permanente y Legal
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
-                      Sin prácticas inseguras. Tramitamos solicitudes oficiales basadas en normativas legales y términos de cada plataforma.
-                    </p>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <Zap className="w-4 h-4 text-[#bcff48]" />
+                    </div>
+                    <div>
+                      <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+                        Software Propietario con Detección IA
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
+                        Identifica en minutos patrones de ataque, bots, lenguaje inapropiado y cuentas fraudulentas.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <Award className="w-4 h-4 text-[#bcff48]" />
+                    </div>
+                    <div>
+                      <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+                        Garantía 100% de Devolución
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
+                        Su inversión está totalmente protegida. Si el caso no se resuelve favorablemente, reembolsamos el 100%.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Zap className="w-4 h-4 text-[#bcff48]" />
-                  </div>
-                  <div>
-                    <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-                      Software Propietario con Detección IA
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
-                      Identifica en minutos patrones de ataque, bots, lenguaje inapropiado y cuentas fraudulentas.
-                    </p>
-                  </div>
+                {/* Botón de llamada a la acción */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setSpecialistModalOpen(true)}
+                    className="section-copy inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-7 py-4 rounded-full bg-[#bcff48] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Auditar mi caso con un especialista</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <p className="section-copy text-[11px] text-[#f7f7f2]/60 mt-3 flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-[#bcff48]" />
+                    <span>Diagnóstico inicial confidencial y respuesta en &lt; 15 min</span>
+                  </p>
                 </div>
-
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-[#bcff48]/10 border border-[#bcff48]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Award className="w-4 h-4 text-[#bcff48]" />
-                  </div>
-                  <div>
-                    <h4 className="section-title text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-                      Garantía 100% de Devolución
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-0.5">
-                      Su inversión está totalmente protegida. Si el caso no se resuelve favorablemente, reembolsamos el 100%.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Botón de llamada a la acción */}
-              <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={() => setSpecialistModalOpen(true)}
-                  className="section-copy inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-7 py-4 rounded-full bg-[#bcff48] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Auditar mi caso con un especialista</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <p className="section-copy text-[11px] text-[#f7f7f2]/60 mt-3 flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 text-[#bcff48]" />
-                  <span>Diagnóstico inicial confidencial y respuesta en &lt; 15 min</span>
-                </p>
-              </div>
+              </ScrollReveal>
             </div>
 
             {/* LADO DERECHO: LO QUE AYUDAMOS A ELIMINAR */}
             <div className="lg:col-span-7">
-              <div className="rounded-2xl sm:rounded-3xl bg-[#11141a]/90 border border-white/10 p-5 sm:p-7 md:p-8 backdrop-blur-sm relative">
-                {/* Cabecera del cuadro derecho */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-5 mb-6 border-b border-white/10">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#bcff48] font-bold">
-                      COBERTURA DE ELIMINACIÓN Y GESTIÓN
-                    </span>
-                    <h3 className="section-title text-xl sm:text-2xl font-bold text-white mt-1">
-                      Lo que eliminamos para proteger tu negocio
-                    </h3>
-                  </div>
-                  <div className="px-3 py-1 rounded-full bg-[#ff5a42]/10 border border-[#ff5a42]/30 text-[#ff5a42] text-[11px] font-mono font-bold">
-                    94.8% Éxito Comprobado
-                  </div>
-                </div>
-
-                {/* Grid con las 6 amenazas principales que eliminan los especialistas y software */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Tarjeta 1 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <UserX className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Reseñas falsas de competidores
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Ataques sucios y campañas orquestadas por perfiles falsos que nunca fueron clientes de su negocio.
-                    </p>
-                  </div>
-
-                  {/* Tarjeta 2 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <Star className="w-4 h-4 fill-[#ff5a42]" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Calificaciones de 1★ sin comentario
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Puntuaciones vacías sin texto explicativo ni evidencia de servicio que hunden su calificación promedio.
-                    </p>
-                  </div>
-
-                  {/* Tarjeta 3 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <ShieldAlert className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Difamación y lenguaje ofensivo
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Reseñas que violan términos oficiales, incluyen insultos, acusaciones falsas o amenazas comerciales.
-                    </p>
-                  </div>
-
-                  {/* Tarjeta 4 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <Trash2 className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Ataques de bots masivos y spam
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Bombardeo coordinado de valoraciones artificiales generadas por software malicioso de terceros.
-                    </p>
-                  </div>
-
-                  {/* Tarjeta 5 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <FileWarning className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Reseñas de ex-empleados o conflictos
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Disputas internas o personales que no corresponden a experiencias de clientes genuinos.
-                    </p>
-                  </div>
-
-                  {/* Tarjeta 6 */}
-                  <div className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/40 p-4 transition-all group">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
-                        <CheckCircle2 className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
-                        Eliminable
-                      </span>
-                    </div>
-                    <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
-                      Quejas resueltas o malentendidos
-                    </h4>
-                    <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
-                      Problemas ya resueltos con el cliente que siguen afectando injustamente la conversión de ventas.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Barra de impacto / Garantía */}
-                <div className="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-[#bcff48]/10 via-transparent to-[#ff5a42]/10 p-4 rounded-xl border border-white/10">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#bcff48]/20 flex items-center justify-center shrink-0">
-                      <ShieldCheck className="w-5 h-5 text-[#bcff48]" />
-                    </div>
+              <ScrollReveal direction="up" distance={30} delay={120}>
+                <div className="rounded-2xl sm:rounded-3xl bg-[#11141a]/90 border border-white/10 p-5 sm:p-7 md:p-8 backdrop-blur-sm relative">
+                  {/* Cabecera del cuadro derecho */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-5 mb-6 border-b border-white/10">
                     <div>
-                      <p className="section-title text-xs sm:text-sm font-bold text-white">
-                        Eliminación sin penalización para su perfil
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#bcff48] font-bold">
+                        COBERTURA DE ELIMINACIÓN Y GESTIÓN
+                      </span>
+                      <h3 className="section-title text-xl sm:text-2xl font-bold text-white mt-1">
+                        Lo que eliminamos para proteger tu negocio
+                      </h3>
+                    </div>
+                    <div className="px-3 py-1 rounded-full bg-[#ff5a42]/10 border border-[#ff5a42]/30 text-[#ff5a42] text-[11px] font-mono font-bold">
+                      94.8% Éxito Comprobado
+                    </div>
+                  </div>
+
+                  {/* Grid con las 6 amenazas principales que eliminan los especialistas y software */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Tarjeta 1 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <UserX className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Reseñas falsas de competidores
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Ataques sucios y campañas orquestadas por perfiles falsos que nunca fueron clientes de su negocio.
                       </p>
-                      <p className="section-copy text-[11px] text-[#f7f7f2]/70">
-                        Garantizamos la seguridad total de su ficha en Google, Trustpilot, TripAdvisor y Facebook.
+                    </div>
+
+                    {/* Tarjeta 2 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <Star className="w-4 h-4 fill-[#ff5a42]" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Calificaciones de 1★ sin comentario
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Puntuaciones vacías sin texto explicativo ni evidencia de servicio que hunden su calificación promedio.
+                      </p>
+                    </div>
+
+                    {/* Tarjeta 3 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <ShieldAlert className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Difamación y lenguaje ofensivo
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Reseñas que violan términos oficiales, incluyen insultos, acusaciones falsas o amenazas comerciales.
+                      </p>
+                    </div>
+
+                    {/* Tarjeta 4 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <Trash2 className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Ataques de bots masivos y spam
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Bombardeo coordinado de valoraciones artificiales generadas por software malicioso de terceros.
+                      </p>
+                    </div>
+
+                    {/* Tarjeta 5 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <FileWarning className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Reseñas de ex-empleados o conflictos
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Disputas internas o personales que no corresponden a experiencias de clientes genuinos.
+                      </p>
+                    </div>
+
+                    {/* Tarjeta 6 */}
+                    <div className="rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff5a42]/50 p-4 sm:p-5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,90,66,0.15)]">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5a42]/15 border border-[#ff5a42]/30 flex items-center justify-center text-[#ff5a42]">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5a42]/15 text-[#ff5a42] border border-[#ff5a42]/20">
+                          Eliminable
+                        </span>
+                      </div>
+                      <h4 className="section-title text-sm sm:text-base font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                        Quejas resueltas o malentendidos
+                      </h4>
+                      <p className="section-copy text-xs text-[#f7f7f2]/75 leading-relaxed mt-1.5">
+                        Problemas ya resueltos con el cliente que siguen afectando injustamente la conversión de ventas.
                       </p>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setSpecialistModalOpen(true)}
-                    className="section-copy text-xs font-bold text-[#bcff48] hover:text-white uppercase tracking-wider flex items-center gap-1.5 transition-colors focus-visible:outline-none"
-                  >
-                    <span>Consultar mi caso</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+
+                  {/* Barra de impacto / Garantía */}
+                  <div className="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-[#bcff48]/10 via-transparent to-[#ff5a42]/10 p-4 rounded-xl border border-white/10">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#bcff48]/20 flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-5 h-5 text-[#bcff48]" />
+                      </div>
+                      <div>
+                        <p className="section-title text-xs sm:text-sm font-bold text-white">
+                          Eliminación sin penalización para su perfil
+                        </p>
+                        <p className="section-copy text-[11px] text-[#f7f7f2]/70">
+                          Garantizamos la seguridad total de su ficha en Google, Trustpilot, TripAdvisor y Facebook.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSpecialistModalOpen(true)}
+                      className="section-copy text-xs font-bold text-[#bcff48] hover:text-white uppercase tracking-wider flex items-center gap-1.5 transition-colors focus-visible:outline-none"
+                    >
+                      <span>Consultar mi caso</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>
@@ -2439,144 +2478,170 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* CUADRO HORIZONTAL LARGO DE IZQUIERDA A DERECHA CON LAS 3 MÉTRICAS */}
-          <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-3.5 sm:p-5 mb-12 sm:mb-16 backdrop-blur-md shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-              {/* Métrica 1: 60% */}
-              <div className="flex items-center gap-4 p-3.5 sm:p-4">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
-                  60%
-                </span>
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
-                  Los especialistas en marketing B2B afirmaron que el SEO y el tráfico orgánico generan más leads que cualquier otra iniciativa de marketing.
-                </p>
-              </div>
+          <ScrollReveal direction="up" distance={25}>
+            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-3.5 sm:p-5 mb-12 sm:mb-16 backdrop-blur-md shadow-xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                {/* Métrica 1: 60% */}
+                <div className="flex items-center gap-4 p-3.5 sm:p-4">
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
+                    60%
+                  </span>
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
+                    Los especialistas en marketing B2B afirmaron que el SEO y el tráfico orgánico generan más leads que cualquier otra iniciativa de marketing.
+                  </p>
+                </div>
 
-              {/* Métrica 2: 85% */}
-              <div className="flex items-center gap-4 p-3.5 sm:p-4">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
-                  85%
-                </span>
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
-                  de personas que realizan algún tipo de investigación en línea antes de contactar a un negocio para realizar una compra.
-                </p>
-              </div>
+                {/* Métrica 2: 85% */}
+                <div className="flex items-center gap-4 p-3.5 sm:p-4">
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
+                    85%
+                  </span>
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
+                    de personas que realizan algún tipo de investigación en línea antes de contactar a un negocio para realizar una compra.
+                  </p>
+                </div>
 
-              {/* Métrica 3: 76% */}
-              <div className="flex items-center gap-4 p-3.5 sm:p-4">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
-                  76%
-                </span>
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
-                  de los consumidores confían tanto en las reseñas en línea como en las recomendaciones personales.
-                </p>
+                {/* Métrica 3: 76% */}
+                <div className="flex items-center gap-4 p-3.5 sm:p-4">
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#bcff48] tracking-tight shrink-0 font-mono">
+                    76%
+                  </span>
+                  <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-snug">
+                    de los consumidores confían tanto en las reseñas en línea como en las recomendaciones personales.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* ESTRUCTURA PRINCIPAL: IZQUIERDA (ILUSTRACIÓN PC) + DERECHA (PROCESO) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* LADO IZQUIERDO: ILUSTRACIÓN VECTORIAL MEJORADA DE COMPUTADOR, PERSONAJE, ESTRELLAS Y FLECHA ASCENDENTE */}
             <div className="lg:col-span-5 flex flex-col items-center">
-              <ReviewProcessIllustration />
+              <ScrollReveal direction="up" distance={30} delay={60}>
+                <ReviewProcessIllustration />
+              </ScrollReveal>
             </div>
 
             {/* LADO DERECHO: CUADRO CON PROCESO DE PUBLICACIÓN Y SUS 4 ETAPAS */}
             <div className="lg:col-span-7">
-              <div className="rounded-2xl sm:rounded-3xl bg-[#11141a]/90 border border-white/10 p-6 sm:p-8 md:p-9 backdrop-blur-sm relative">
-                {/* Badge de proceso */}
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-[11px] font-mono font-bold tracking-widest uppercase mb-3">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Review Process Illustration</span>
+              <ScrollReveal direction="up" distance={30} delay={140}>
+                <div className="rounded-2xl sm:rounded-3xl bg-[#11141a]/90 border border-white/10 p-6 sm:p-8 md:p-9 backdrop-blur-sm relative">
+                  {/* Badge de proceso */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-[11px] font-mono font-bold tracking-widest uppercase mb-3">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Review Process Illustration</span>
+                  </div>
+
+                  {/* Título principal */}
+                  <h2 className="section-title text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-tight mb-4">
+                    Nuestra publicación de reseñas y el impulso de la marca Proceso
+                  </h2>
+
+                  {/* Párrafo introductorio */}
+                  <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/85 leading-relaxed mb-7 font-normal">
+                    Cada campaña de gestión de revisiones ofrece sus propios desafíos y oportunidades únicos. Aunque las tácticas variarán según las necesidades específicas de cada cliente, nuestro proceso de establecimiento de objetivos, puntos de control y las expectativas nunca cambian. Al trabajar con nosotros, siempre puede esperar una transparencia total, asesoramiento experto y comunicación rápida.
+                  </p>
+
+                  {/* 4 Pasos del Proceso con números de secuencia y animaciones interactivas */}
+                  <div className="space-y-4">
+                    {/* Paso 01: Descubrimiento */}
+                    <div className="group p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#bcff48]/50 hover:bg-white/[0.04] hover:translate-x-1 transition-all duration-300">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Search className="w-4 h-4 text-[#bcff48]" />
+                          </span>
+                          <h3 className="section-title text-base sm:text-lg font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                            Descubrimiento
+                          </h3>
+                        </div>
+                        <span className="text-[11px] font-mono font-bold text-white/40 group-hover:text-[#bcff48] px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                          ETAPA 01
+                        </span>
+                      </div>
+                      <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-11">
+                        Examinamos su presencia en línea para determinar tus necesidades, objetivos, y el contenido que desea que eliminemos o desplacemos.
+                      </p>
+                    </div>
+
+                    {/* Paso 02: Medir, analizar y priorizar */}
+                    <div className="group p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#bcff48]/50 hover:bg-white/[0.04] hover:translate-x-1 transition-all duration-300">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <TrendingUp className="w-4 h-4 text-[#bcff48]" />
+                          </span>
+                          <h3 className="section-title text-base sm:text-lg font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                            Medir, analizar y priorizar
+                          </h3>
+                        </div>
+                        <span className="text-[11px] font-mono font-bold text-white/40 group-hover:text-[#bcff48] px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                          ETAPA 02
+                        </span>
+                      </div>
+                      <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-11">
+                        Nuestros estrategas determinan qué tácticas o curso de acción es el más efectivo para publicar el contenido positivo.
+                      </p>
+                    </div>
+
+                    {/* Paso 03: Diseño y lanzamiento de campaña de publicación */}
+                    <div className="group p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#bcff48]/50 hover:bg-white/[0.04] hover:translate-x-1 transition-all duration-300">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Zap className="w-4 h-4 text-[#bcff48]" />
+                          </span>
+                          <h3 className="section-title text-base sm:text-lg font-bold text-white group-hover:text-[#bcff48] transition-colors">
+                            Diseño y lanzamiento de campaña de publicación
+                          </h3>
+                        </div>
+                        <span className="text-[11px] font-mono font-bold text-white/40 group-hover:text-[#bcff48] px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                          ETAPA 03
+                        </span>
+                      </div>
+                      <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-11">
+                        Nuestro equipo de expertos toma medidas usando varias conexiones internas a negocios, opciones legales, estrategias de SEO, software o una combinación de múltiples facetas.
+                      </p>
+                    </div>
+
+                    {/* Paso 04: Obtenga miles de reseñas positivas Mensual / Seguimiento del progreso */}
+                    <div className="group p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#bcff48]/15 via-white/[0.03] to-transparent border border-[#bcff48]/40 hover:border-[#bcff48]/70 hover:translate-x-1 transition-all duration-300 shadow-[0_4px_25px_rgba(188,255,72,0.1)]">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-lg bg-[#bcff48] text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Sparkles className="w-4 h-4 text-black" />
+                          </span>
+                          <h3 className="section-title text-base sm:text-lg font-bold text-[#bcff48]">
+                            Obtenga miles de reseñas positivas Mensual / Seguimiento del progreso
+                          </h3>
+                        </div>
+                        <span className="text-[11px] font-mono font-bold text-black px-2 py-0.5 rounded bg-[#bcff48]">
+                          ETAPA 04
+                        </span>
+                      </div>
+                      <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/90 leading-relaxed pl-11">
+                        Generamos un flujo continuo de reseñas verificadas, enviamos informes mensuales transparentes y protegemos su calificación de por vida.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Acciones de cierre del cuadro */}
+                  <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setSpecialistModalOpen(true)}
+                      className="section-copy inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Iniciar mi campaña ahora</span>
+                    </button>
+                    <span className="section-copy text-xs text-[#f7f7f2]/60 font-mono">
+                      Rastreo en tiempo real · Google Sheets
+                    </span>
+                  </div>
                 </div>
-
-                {/* Título principal */}
-                <h2 className="section-title text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-tight mb-4">
-                  Nuestra publicación de reseñas y el impulso de la marca Proceso
-                </h2>
-
-                {/* Párrafo introductorio */}
-                <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/85 leading-relaxed mb-7 font-normal">
-                  Cada campaña de gestión de revisiones ofrece sus propios desafíos y oportunidades únicos. Aunque las tácticas variarán según las necesidades específicas de cada cliente, nuestro proceso de establecimiento de objetivos, puntos de control y las expectativas nunca cambian. Al trabajar con nosotros, siempre puede esperar una transparencia total, asesoramiento experto y comunicación rápida.
-                </p>
-
-                {/* 4 Pasos del Proceso */}
-                <div className="space-y-4">
-                  {/* Descubrimiento */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0">
-                        <Search className="w-4 h-4 text-[#bcff48]" />
-                      </span>
-                      <h3 className="section-title text-base sm:text-lg font-bold text-white">
-                        Descubrimiento
-                      </h3>
-                    </div>
-                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-10">
-                      Examinamos su presencia en línea para determinar tus necesidades, objetivos, y el contenido que desea que eliminemos o desplacemos.
-                    </p>
-                  </div>
-
-                  {/* Medir, analizar y priorizar */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0">
-                        <TrendingUp className="w-4 h-4 text-[#bcff48]" />
-                      </span>
-                      <h3 className="section-title text-base sm:text-lg font-bold text-white">
-                        Medir, analizar y priorizar
-                      </h3>
-                    </div>
-                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-10">
-                      Nuestros estrategas determinan qué tácticas o curso de acción es el más efectivo para publicar el contenido positivo.
-                    </p>
-                  </div>
-
-                  {/* Diseño y lanzamiento de campaña de publicación */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#bcff48]/30 transition-all">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-lg bg-[#bcff48]/15 text-[#bcff48] flex items-center justify-center shrink-0">
-                        <Zap className="w-4 h-4 text-[#bcff48]" />
-                      </span>
-                      <h3 className="section-title text-base sm:text-lg font-bold text-white">
-                        Diseño y lanzamiento de campaña de publicación
-                      </h3>
-                    </div>
-                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 leading-relaxed pl-10">
-                      Nuestro equipo de expertos toma medidas usando varias conexiones internas a negocios, opciones legales, estrategias de SEO, software o una combinación de múltiples facetas.
-                    </p>
-                  </div>
-
-                  {/* Obtenga miles de reseñas positivas Mensual / Seguimiento del progreso */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#bcff48]/10 via-white/[0.02] to-transparent border border-[#bcff48]/30 hover:border-[#bcff48]/60 transition-all">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-lg bg-[#bcff48] text-black flex items-center justify-center shrink-0">
-                        <Sparkles className="w-4 h-4 text-black" />
-                      </span>
-                      <h3 className="section-title text-base sm:text-lg font-bold text-[#bcff48]">
-                        Obtenga miles de reseñas positivas Mensual / Seguimiento del progreso
-                      </h3>
-                    </div>
-                    <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/85 leading-relaxed pl-10">
-                      Nuestro enfoque integral no solo mejora su presencia en línea, pero también garantiza que usted se mantenga a la vanguardia de los comentarios negativos. Dependiendo de tu plan, escribiremos de 3 a 50 reseñas por día, y su progreso se rastrea en tiempo real en Google Sheets. Medimos el progreso en relación con sus objetivos y lo actualizamos periódicamente en los puntos de control de tu campaña personalizada.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Acciones de cierre del cuadro */}
-                <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setSpecialistModalOpen(true)}
-                    className="section-copy inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Iniciar mi campaña ahora</span>
-                  </button>
-                  <span className="section-copy text-xs text-[#f7f7f2]/60 font-mono">
-                    Rastreo en tiempo real · Google Sheets
-                  </span>
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>
@@ -2591,38 +2656,40 @@ export default function App() {
       {/* SECCIÓN 9: CONTACTO Y ASESORÍA PERSONALIZADA */}
       <section id="contacto" className="relative py-20 sm:py-24 pb-28 lg:pb-24 bg-gradient-to-b from-[#040507] via-black to-black border-t border-white/10 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Contacto Directo con Especialistas</span>
-          </div>
+          <ScrollReveal direction="up" distance={30}>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 text-[#bcff48] text-xs font-mono font-bold tracking-widest uppercase mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Contacto Directo con Especialistas</span>
+            </div>
 
-          <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
-            ¿Listo para transformar la reputación de tu negocio?
-          </h2>
+            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+              ¿Listo para transformar la reputación de tu negocio?
+            </h2>
 
-          <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/80 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Obtén un diagnóstico gratuito y confidencial en menos de 15 minutos. Nuestro equipo de gestión y eliminación de reseñas está disponible para asistirte.
-          </p>
+            <p className="section-copy text-sm sm:text-base text-[#f7f7f2]/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Obtén un diagnóstico gratuito y confidencial en menos de 15 minutos. Nuestro equipo de gestión y eliminación de reseñas está disponible para asistirte.
+            </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => setSpecialistModalOpen(true)}
-              className="section-copy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#bcff48] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#a6ea34] transition-all shadow-[0_0_30px_rgba(188,255,72,0.4)]"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>Hablar con un Especialista</span>
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => setSpecialistModalOpen(true)}
+                className="section-copy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#bcff48] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#a6ea34] transition-all shadow-[0_0_30px_rgba(188,255,72,0.4)]"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Hablar con un Especialista</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setSelectedCatalogPlatform('Google Reviews')}
-              className="section-copy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs uppercase tracking-wider transition-all"
-            >
-              <span>Ver Catálogo de Precios</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCatalogPlatform('Google Reviews')}
+                className="section-copy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs uppercase tracking-wider transition-all"
+              >
+                <span>Ver Catálogo de Precios</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </ScrollReveal>
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between text-xs text-[#f7f7f2]/50">
             <p>© {new Date().getFullYear()} TrustUpReviews™. Todos los derechos reservados.</p>

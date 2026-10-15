@@ -1,6 +1,9 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ReviewProcessIllustration: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="relative w-full max-w-[520px] mx-auto select-none">
       {/* Resplandor ambiental de fondo */}
@@ -11,7 +14,7 @@ export const ReviewProcessIllustration: React.FC = () => {
         {/* Badge interactivo de proceso activo */}
         <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-[#bcff48]/30 text-[10px] text-[#bcff48] font-mono font-bold tracking-wider backdrop-blur-md shadow-lg">
           <span className="w-2 h-2 rounded-full bg-[#bcff48] shadow-[0_0_8px_#bcff48] animate-pulse" />
-          <span>PROCESO ACTIVO</span>
+          <span>{t.process.illustration.activeProcess}</span>
         </div>
         {/* SVG Vectorial de alta definición que reproduce y mejora la imagen del usuario */}
         <svg
@@ -309,11 +312,11 @@ export const ReviewProcessIllustration: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00E599] animate-pulse" />
             <span className="font-mono text-[11px] font-bold text-white tracking-wide">
-              CAMPAÑA ACTIVA 24/7
+              {t.process.illustration.activeCampaign}
             </span>
           </div>
           <span className="font-mono text-[11px] text-[#bcff48] font-semibold">
-            +3 a 50 RESEÑAS / DÍA
+            {t.process.illustration.dailyReviews}
           </span>
         </div>
       </div>

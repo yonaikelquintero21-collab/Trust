@@ -229,5 +229,22 @@ html, body {
   outline-offset: 2px;
 }
 
+/* Evitar zoom automático indeseado en inputs en iOS Safari manteniendo tamaño legible */
+@media screen and (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Optimización táctil y zonas seguras para dispositivos modernos */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .safe-pt {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+}
+
 
 

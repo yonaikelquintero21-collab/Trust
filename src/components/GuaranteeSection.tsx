@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, ShieldCheck, CheckCircle2, RotateCcw, Quote, ArrowRight, Award, Sparkles } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { useLanguage } from '../context/LanguageContext';
 
 interface GuaranteeSectionProps {
   onOpenSpecialist?: () => void;
@@ -93,8 +94,10 @@ const HonestPawsLogo: React.FC = () => (
 );
 
 export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecialist }) => {
+  const { t } = useLanguage();
+
   return (
-    <section id="garantia" className="relative py-20 sm:py-28 bg-gradient-to-b from-black via-[#08090b] to-[#050607] border-t border-white/10 overflow-hidden">
+    <section id="garantia" className="relative py-16 sm:py-24 lg:py-28 bg-gradient-to-b from-black via-[#08090b] to-[#050607] border-t border-white/10 overflow-hidden">
       {/* Resplandor y halo central de fondo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#bcff48]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
@@ -112,122 +115,131 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecia
         
         {/* PARTE SUPERIOR: CABECERA TOTALMENTE CENTRADA */}
         <ScrollReveal direction="up" distance={25}>
-          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 lg:mb-20">
             {/* Badge de garantía */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 mb-6 backdrop-blur-sm shadow-[0_0_20px_rgba(188,255,72,0.15)]">
-              <RotateCcw className="w-4 h-4 text-[#bcff48]" />
-              <span className="section-copy text-xs font-bold uppercase tracking-widest text-[#bcff48]">
-                100% GARANTÍA DE SATISFACCIÓN O REEMBOLSO
+            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#bcff48]/10 border border-[#bcff48]/30 mb-5 sm:mb-6 backdrop-blur-sm shadow-[0_0_20px_rgba(188,255,72,0.15)] max-w-full">
+              <RotateCcw className="w-4 h-4 text-[#bcff48] shrink-0" />
+              <span className="section-copy text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#bcff48] truncate">
+                {t.guarantee.badge}
               </span>
-              <Sparkles className="w-3.5 h-3.5 text-[#bcff48]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#bcff48] shrink-0 hidden sm:inline" />
             </div>
 
-            {/* Título principal solicitado */}
-            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6">
-              La garantía de confianza
+            {/* Título principal */}
+            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-5 sm:mb-6 leading-tight">
+              {t.guarantee.title}
             </h2>
 
-            {/* Párrafo central solicitado */}
+            {/* Párrafo central */}
             <div className="space-y-3">
-              <p className="section-title text-lg sm:text-xl md:text-2xl font-bold text-[#bcff48] leading-snug">
-                Ofrecemos una garantía de devolución del dinero del 100% en Reseñas de TrustUp
+              <p className="section-title text-base sm:text-xl md:text-2xl font-bold text-[#bcff48] leading-snug">
+                {t.guarantee.p1}
               </p>
-              <p className="section-copy text-sm sm:text-base md:text-lg text-[#f7f7f2]/80 leading-relaxed max-w-2xl mx-auto">
-                En casos excepcionales en los que no vea los resultados esperados, le ofreceremos un reembolso de su dinero. No preguntas formuladas.
+              <p className="section-copy text-xs sm:text-base md:text-lg text-[#f7f7f2]/80 leading-relaxed max-w-2xl mx-auto">
+                {t.guarantee.p2}
               </p>
             </div>
 
             {/* Sellos de respaldo y confianza */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-[#f7f7f2]/70 font-mono">
+            <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-4 md:gap-6 text-[11px] sm:text-xs text-[#f7f7f2]/70 font-mono">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10">
-                <ShieldCheck className="w-4 h-4 text-[#bcff48]" />
-                <span>Garantía Contractual</span>
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bcff48]" />
+                <span>{t.guarantee.seals.s1}</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10">
-                <CheckCircle2 className="w-4 h-4 text-[#bcff48]" />
-                <span>Cero Preguntas Formuladas</span>
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bcff48]" />
+                <span>{t.guarantee.seals.s2}</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10">
-                <Award className="w-4 h-4 text-[#bcff48]" />
-                <span>Protección 100% Sin Riesgo</span>
+                <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bcff48]" />
+                <span>{t.guarantee.seals.s3}</span>
               </div>
             </div>
           </div>
         </ScrollReveal>
 
         {/* PARTE INFERIOR: 3 CUADROS CON TESTIMONIOS, LOGOS Y RESULTADOS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           
-          {/* ========================================================
-              CUADRO 1: Viller Valla
-             ======================================================== */}
+          {/* CUADRO 1: Viller Valla */}
           <ScrollReveal direction="up" distance={30} delay={0}>
-            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-6 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
-              {/* Resplandor decorativo interno en hover */}
+            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-5 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#fecc00]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#bcff48]/10 transition-all" />
 
               <div>
                 {/* Cabecera del cuadro: Logo de la marca */}
-                <div className="flex items-center justify-between pb-5 border-b border-white/10 mb-5">
+                <div className="flex items-center justify-between pb-4 sm:pb-5 border-b border-white/10 mb-4 sm:mb-5">
                   <VillerVallaLogo />
-                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider">
-                    Verificado
+                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider shrink-0">
+                    {t.guarantee.verified}
                   </span>
                 </div>
 
                 {/* 5 Star Rating */}
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-[#fecc00]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#fecc00] text-[#fecc00]" />
+                      <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#fecc00]" />
                     ))}
                   </div>
                   <span className="section-copy text-xs font-bold text-[#fecc00] tracking-wide">
-                    5 star rating
+                    {t.guarantee.starRating}
                   </span>
                 </div>
 
                 {/* Título entrecomillado del cliente */}
-                <h3 className="section-title text-lg sm:text-xl font-bold text-white mb-3 flex items-start gap-1">
-                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-1" />
-                  <span>"Excelente servicio. ¡Lo usaré de nuevo!"</span>
+                <h3 className="section-title text-base sm:text-lg font-bold text-white mb-2.5 flex items-start gap-1 leading-snug">
+                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-0.5" />
+                  <span>{t.guarantee.testimonials.villervalla.quote}</span>
                 </h3>
 
-                {/* Texto exacto del testimonio */}
+                {/* Texto del testimonio */}
                 <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                  Al principio nos enfrentamos a críticas ilegítimas, buscamos TrustUpReviews' ayuda, lo que resultó en la eliminación de más de 1000+ reseñas y la adición de más de 150 reseñas mensualmente. Esto permitió que nuestros propietarios de franquicias deben centrarse en los aspectos principales y al mismo tiempo ahorrarnos aproximadamente 28.000 minutos en conjunto.
+                  {t.guarantee.testimonials.villervalla.text}
                 </p>
               </div>
 
               {/* Pie del cuadro: Métricas clave y Autor */}
-              <div className="mt-6 pt-5 border-t border-white/10">
+              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/10">
                 {/* Chips de métricas clave */}
-                <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#bcff48] font-mono">-1,000+</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Eliminadas</span>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-4 text-center">
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#bcff48] font-mono">
+                      {t.guarantee.testimonials.villervalla.stats.stat1.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.villervalla.stats.stat1.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-white font-mono">+150/mes</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Nuevas</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-white font-mono">
+                      {t.guarantee.testimonials.villervalla.stats.stat2.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.villervalla.stats.stat2.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#fecc00] font-mono">28,000 m</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Ahorrados</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#fecc00] font-mono">
+                      {t.guarantee.testimonials.villervalla.stats.stat3.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.villervalla.stats.stat3.label}
+                    </span>
                   </div>
                 </div>
 
                 {/* Autor */}
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#006aa7] to-[#fecc00] flex items-center justify-center font-bold text-xs text-white shadow">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#006aa7] to-[#fecc00] flex items-center justify-center font-bold text-xs text-white shadow shrink-0">
                     HH
                   </div>
-                  <div>
-                    <div className="section-title text-xs sm:text-sm font-bold text-white">
-                      Hanna Håkansson
+                  <div className="min-w-0">
+                    <div className="section-title text-xs sm:text-sm font-bold text-white truncate">
+                      {t.guarantee.testimonials.villervalla.author}
                     </div>
-                    <div className="section-copy text-[11px] text-[#bcff48]">
-                      Directora ejecutiva, Viller Valla
+                    <div className="section-copy text-[10px] sm:text-[11px] text-[#bcff48] truncate">
+                      {t.guarantee.testimonials.villervalla.role}
                     </div>
                   </div>
                 </div>
@@ -235,76 +247,78 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecia
             </div>
           </ScrollReveal>
 
-          {/* ========================================================
-              CUADRO 2: Peaches
-             ======================================================== */}
+          {/* CUADRO 2: Peaches */}
           <ScrollReveal direction="up" distance={30} delay={120}>
-            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-6 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
-              {/* Resplandor decorativo interno en hover */}
+            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-5 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#ff7b72]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#bcff48]/10 transition-all" />
 
               <div>
-                {/* Cabecera del cuadro: Logo de la marca */}
-                <div className="flex items-center justify-between pb-5 border-b border-white/10 mb-5">
+                <div className="flex items-center justify-between pb-4 sm:pb-5 border-b border-white/10 mb-4 sm:mb-5">
                   <PeachesLogo />
-                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider">
-                    Verificado
+                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider shrink-0">
+                    {t.guarantee.verified}
                   </span>
                 </div>
 
-                {/* 5 Star Rating */}
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-[#fecc00]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#fecc00] text-[#fecc00]" />
+                      <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#fecc00]" />
                     ))}
                   </div>
                   <span className="section-copy text-xs font-bold text-[#fecc00] tracking-wide">
-                    5 star rating
+                    {t.guarantee.starRating}
                   </span>
                 </div>
 
-                {/* Título entrecomillado del cliente */}
-                <h3 className="section-title text-lg sm:text-xl font-bold text-white mb-3 flex items-start gap-1">
-                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-1" />
-                  <span>"Una verdadera extensión de nuestro equipo..."</span>
+                <h3 className="section-title text-base sm:text-lg font-bold text-white mb-2.5 flex items-start gap-1 leading-snug">
+                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-0.5" />
+                  <span>{t.guarantee.testimonials.peaches.quote}</span>
                 </h3>
 
-                {/* Texto exacto del testimonio */}
                 <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                  "TrustUpReviews publicó más de 391 nuevas reseñas positivas y elevó nuestra calificación de marca a 4,8 al tiempo que aumentó nuestra tasa de conversión en un 15%. Sus resultados hablan por sí solos, pero son una verdadera extensión de nuestro equipo”
+                  {t.guarantee.testimonials.peaches.text}
                 </p>
               </div>
 
-              {/* Pie del cuadro: Métricas clave y Autor */}
-              <div className="mt-6 pt-5 border-t border-white/10">
-                {/* Chips de métricas clave */}
-                <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#bcff48] font-mono">+391</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Reseñas</span>
+              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/10">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-4 text-center">
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#bcff48] font-mono">
+                      {t.guarantee.testimonials.peaches.stats.stat1.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.peaches.stats.stat1.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-white font-mono">4.8 ⭐</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Calificación</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-white font-mono">
+                      {t.guarantee.testimonials.peaches.stats.stat2.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.peaches.stats.stat2.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#ff7b72] font-mono">+15%</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Conversión</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#ff7b72] font-mono">
+                      {t.guarantee.testimonials.peaches.stats.stat3.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.peaches.stats.stat3.label}
+                    </span>
                   </div>
                 </div>
 
-                {/* Autor */}
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff7b72] to-[#ffa07a] flex items-center justify-center font-bold text-xs text-white shadow">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#ff7b72] to-[#ffa07a] flex items-center justify-center font-bold text-xs text-white shadow shrink-0">
                     LE
                   </div>
-                  <div>
-                    <div className="section-title text-xs sm:text-sm font-bold text-white">
-                      Lindsay Eccleston
+                  <div className="min-w-0">
+                    <div className="section-title text-xs sm:text-sm font-bold text-white truncate">
+                      {t.guarantee.testimonials.peaches.author}
                     </div>
-                    <div className="section-copy text-[11px] text-[#bcff48]">
-                      Directora de Comercio Electrónico, Peaches
+                    <div className="section-copy text-[10px] sm:text-[11px] text-[#bcff48] truncate">
+                      {t.guarantee.testimonials.peaches.role}
                     </div>
                   </div>
                 </div>
@@ -312,76 +326,78 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecia
             </div>
           </ScrollReveal>
 
-          {/* ========================================================
-              CUADRO 3: Honest Paws
-             ======================================================== */}
+          {/* CUADRO 3: Honest Paws */}
           <ScrollReveal direction="up" distance={30} delay={240}>
-            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-6 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
-              {/* Resplandor decorativo interno en hover */}
+            <div className="relative group rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-[#bcff48]/40 p-5 sm:p-7 flex flex-col justify-between h-full transition-all duration-300 hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#10b981]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#bcff48]/10 transition-all" />
 
               <div>
-                {/* Cabecera del cuadro: Logo de la marca */}
-                <div className="flex items-center justify-between pb-5 border-b border-white/10 mb-5">
+                <div className="flex items-center justify-between pb-4 sm:pb-5 border-b border-white/10 mb-4 sm:mb-5">
                   <HonestPawsLogo />
-                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider">
-                    Verificado
+                  <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-[#f7f7f2]/60 uppercase tracking-wider shrink-0">
+                    {t.guarantee.verified}
                   </span>
                 </div>
 
-                {/* 5 Star Rating */}
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-[#fecc00]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#fecc00] text-[#fecc00]" />
+                      <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#fecc00]" />
                     ))}
                   </div>
                   <span className="section-copy text-xs font-bold text-[#fecc00] tracking-wide">
-                    5 star rating
+                    {t.guarantee.starRating}
                   </span>
                 </div>
 
-                {/* Título entrecomillado del cliente */}
-                <h3 className="section-title text-lg sm:text-xl font-bold text-white mb-3 flex items-start gap-1">
-                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-1" />
-                  <span>"Lo recomendaría a cualquier otro comercio electrónico ¡propietarios!"</span>
+                <h3 className="section-title text-base sm:text-lg font-bold text-white mb-2.5 flex items-start gap-1 leading-snug">
+                  <Quote className="w-4 h-4 text-[#bcff48] shrink-0 rotate-180 mt-0.5" />
+                  <span>{t.guarantee.testimonials.honestpaws.quote}</span>
                 </h3>
 
-                {/* Texto exacto del testimonio */}
                 <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/80 leading-relaxed">
-                  Nuestro equipo está muy contento de tener 600+ reseñas publicadas en nuestro sitios, lo cual es fantástico. Tenemos una de las calificaciones de tp más altas en Pet Niche en EE. UU. Le debemos eso para TrustUpReviews. Están muy atentos a nuestras necesidades y respaldaron el crecimiento de la satisfacción con nuestras revisiones 2022-&gt; 2025. Simplemente los amamos. A menudo, las personas son proveedores; no queremos proveedores; queremos socios. TrustUpReviews es un socio número uno.
+                  {t.guarantee.testimonials.honestpaws.text}
                 </p>
               </div>
 
-              {/* Pie del cuadro: Métricas clave y Autor */}
-              <div className="mt-6 pt-5 border-t border-white/10">
-                {/* Chips de métricas clave */}
-                <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#bcff48] font-mono">600+</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Publicadas</span>
+              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/10">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-4 text-center">
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#bcff48] font-mono">
+                      {t.guarantee.testimonials.honestpaws.stats.stat1.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.honestpaws.stats.stat1.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-white font-mono">Top #1</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">Pet Niche US</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-white font-mono">
+                      {t.guarantee.testimonials.honestpaws.stats.stat2.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.honestpaws.stats.stat2.label}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                    <span className="block text-xs font-bold text-[#34d399] font-mono">Partner</span>
-                    <span className="text-[9px] text-[#f7f7f2]/60 leading-tight block">2022-2025</span>
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-black/40 border border-white/5">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#34d399] font-mono">
+                      {t.guarantee.testimonials.honestpaws.stats.stat3.value}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-[#f7f7f2]/60 leading-tight block truncate">
+                      {t.guarantee.testimonials.honestpaws.stats.stat3.label}
+                    </span>
                   </div>
                 </div>
 
-                {/* Autor */}
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#10b981] to-[#047857] flex items-center justify-center font-bold text-xs text-white shadow">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#10b981] to-[#047857] flex items-center justify-center font-bold text-xs text-white shadow shrink-0">
                     MS
                   </div>
-                  <div>
-                    <div className="section-title text-xs sm:text-sm font-bold text-white">
-                      Marko Skulic
+                  <div className="min-w-0">
+                    <div className="section-title text-xs sm:text-sm font-bold text-white truncate">
+                      {t.guarantee.testimonials.honestpaws.author}
                     </div>
-                    <div className="section-copy text-[11px] text-[#bcff48]">
-                      Director de adquisiciones remuneradas, Honest Paws
+                    <div className="section-copy text-[10px] sm:text-[11px] text-[#bcff48] truncate">
+                      {t.guarantee.testimonials.honestpaws.role}
                     </div>
                   </div>
                 </div>
@@ -393,17 +409,17 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecia
 
         {/* Banner inferior de confianza y CTA */}
         <ScrollReveal direction="up" distance={20} delay={150}>
-          <div className="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-white/[0.04] via-[#bcff48]/10 to-white/[0.04] border border-[#bcff48]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-            <div className="flex items-center gap-4 text-center md:text-left">
+          <div className="mt-10 sm:mt-14 p-5 sm:p-8 rounded-2xl bg-gradient-to-r from-white/[0.04] via-[#bcff48]/10 to-white/[0.04] border border-[#bcff48]/30 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
               <div className="w-12 h-12 rounded-xl bg-[#bcff48] text-black flex items-center justify-center shrink-0 font-bold shadow-lg shadow-[#bcff48]/30">
                 <RotateCcw className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="section-title text-base sm:text-lg font-bold text-white">
-                  Garantía incondicional respaldada por contrato
+                  {t.guarantee.bottomBanner.title}
                 </h4>
-                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75">
-                  Si no logramos la meta pactada para tu marca, te reembolsamos el 100% de tu dinero inmediatamente.
+                <p className="section-copy text-xs sm:text-sm text-[#f7f7f2]/75 mt-0.5">
+                  {t.guarantee.bottomBanner.desc}
                 </p>
               </div>
             </div>
@@ -411,9 +427,9 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ onOpenSpecia
               <button
                 type="button"
                 onClick={onOpenSpecialist}
-                className="section-copy shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48]"
+                className="section-copy w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[46px] rounded-full bg-[#bcff48] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#a7eb35] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(188,255,72,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bcff48] active:scale-95"
               >
-                <span>Hablar con un especialista</span>
+                <span>{t.guarantee.bottomBanner.btn}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}

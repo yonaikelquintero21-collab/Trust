@@ -23,6 +23,7 @@ import {
   Award,
   Users,
   Globe,
+  ChevronRight,
 } from 'lucide-react';
 import { ReviewProcessIllustration } from './components/ReviewProcessIllustration';
 import { GuaranteeSection } from './components/GuaranteeSection';
@@ -669,22 +670,30 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                className="sm:hidden px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/20 text-xs font-mono font-bold text-[#bcff48] active:scale-95 flex items-center gap-1.5 min-h-[38px]"
+                className="sm:hidden px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-mono font-bold text-[#bcff48] active:scale-95 flex items-center gap-1.5 min-h-[38px] transition-colors"
                 aria-label="Alternar idioma / Toggle language"
               >
                 <Globe className="w-3.5 h-3.5" />
                 <span>{language.toUpperCase()}</span>
               </button>
 
-              {/* BOTÓN HAMBURGUESA MÓVIL */}
+              {/* BOTÓN HAMBURGUESA MÓVIL (TOGGLE) */}
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
-                aria-label={t.nav.ariaOpenMenu}
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className={`lg:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:outline-none rounded-xl border active:scale-95 ${
+                  mobileMenuOpen
+                    ? 'bg-[#bcff48]/20 border-[#bcff48]/50 text-[#bcff48] shadow-[0_0_15px_rgba(188,255,72,0.3)]'
+                    : 'text-white hover:opacity-80 bg-white/10 hover:bg-white/15 border-white/15'
+                }`}
+                aria-label={mobileMenuOpen ? t.nav.ariaCloseMenu : t.nav.ariaOpenMenu}
                 aria-expanded={mobileMenuOpen}
               >
-                <Menu className="w-5 h-5 text-white" />
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5 text-[#bcff48]" />
+                ) : (
+                  <Menu className="w-5 h-5 text-white" />
+                )}
               </button>
             </div>
           </div>
@@ -763,109 +772,6 @@ export default function App() {
             </a>
           </footer>
         </div>
-
-        {/* MENÚ MÓVIL CON TODAS LAS SECCIONES Y SELECTOR DE IDIOMA */}
-        {mobileMenuOpen && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menú principal de navegación"
-            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-5 sm:p-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden animate-hero-entrance"
-          >
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center shadow-md">
-                  <div className="w-full h-full bg-black rounded-[6px] flex items-center justify-center">
-                    <Star className="w-4 h-4 fill-[#bcff48] text-[#bcff48]" />
-                  </div>
-                </div>
-                <span className="section-title text-xl font-bold text-white tracking-wider">
-                  TrustUp<span className="text-[#bcff48]">Reviews</span>
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:opacity-80 transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95"
-                aria-label={t.nav.ariaCloseMenu}
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-            </div>
-
-            {/* SELECTOR DE IDIOMA DENTRO DEL MENÚ MÓVIL */}
-            <div className="py-3 px-1 border-b border-white/10 max-w-sm mx-auto w-full flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-white/70 font-mono">
-                <Globe className="w-4 h-4 text-[#bcff48]" />
-                <span>Idioma / Language:</span>
-              </div>
-              <div className="inline-flex rounded-full bg-white/10 p-0.5 border border-white/15">
-                <button
-                  type="button"
-                  onClick={() => setLanguage('es')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all min-h-[32px] flex items-center justify-center ${
-                    language === 'es'
-                      ? 'bg-[#bcff48] text-black font-extrabold shadow-sm'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Español
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all min-h-[32px] flex items-center justify-center ${
-                    language === 'en'
-                      ? 'bg-[#bcff48] text-black font-extrabold shadow-sm'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  English
-                </button>
-              </div>
-            </div>
-
-            <nav className="flex flex-col items-stretch gap-2.5 my-auto font-outfit text-sm tracking-wider uppercase text-white overflow-y-auto py-4 max-w-sm mx-auto w-full no-scrollbar">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    setMobileMenuOpen(false);
-                    if (link.href === '#contacto') {
-                      e.preventDefault();
-                      setSpecialistModalOpen(true);
-                    }
-                  }}
-                  className={`transition-all min-h-[48px] flex items-center justify-center rounded-xl text-center font-semibold active:scale-98 ${
-                    link.href === '#contacto'
-                      ? 'bg-[#bcff48] text-black font-extrabold px-6 py-3.5 shadow-[0_0_20px_rgba(188,255,72,0.3)] mt-2'
-                      : 'bg-white/5 hover:bg-white/10 text-white/90 hover:text-white py-3 px-4 border border-white/10'
-                  }`}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="pt-4 border-t border-white/10 flex flex-col gap-2 max-w-sm mx-auto w-full">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSelectedCatalogPlatform('Google Reviews');
-                }}
-                className="w-full min-h-[46px] rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-98 transition-transform"
-              >
-                <span>{t.nav.openCatalogBtn}</span>
-                <ArrowRight className="w-4 h-4 text-[#bcff48]" />
-              </button>
-              <p className="text-[11px] text-white/50 text-center mt-1 section-copy">
-                {t.nav.brandTagline}
-              </p>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* SECCIÓN PORTFOLIO CON CATÁLOGO CLICABLE */}
@@ -2579,6 +2485,153 @@ export default function App() {
                 </p>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MENÚ MÓVIL A PANTALLA COMPLETA CON DISEÑO CYBER-LUXURY (ROOT-LEVEL Z-60) */}
+      {mobileMenuOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.nav.brandTagline}
+          className="fixed inset-0 z-60 bg-[#07080a]/98 backdrop-blur-2xl flex flex-col justify-between overflow-y-auto overscroll-contain animate-menu-drawer p-4 sm:p-7 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:hidden select-none"
+        >
+          {/* CABECERA DEL MENÚ MÓVIL */}
+          <div className="flex items-center justify-between pb-3.5 border-b border-white/10 shrink-0">
+            {/* LOGO */}
+            <a
+              href="#inicio"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 transition-opacity active:scale-95"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#bcff48] to-[#00E599] p-0.5 flex items-center justify-center shadow-[0_0_15px_rgba(188,255,72,0.35)]">
+                <div className="w-full h-full bg-black rounded-[6px] flex items-center justify-center">
+                  <Star className="w-4 h-4 fill-[#bcff48] text-[#bcff48]" />
+                </div>
+              </div>
+              <span className="section-title text-xl font-bold text-white tracking-wider">
+                TrustUp<span className="text-[#bcff48]">Reviews</span>
+              </span>
+            </a>
+
+            {/* BOTÓN CERRAR DEDICADO CON TOUCH TARGET ERGONÓMICO */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#bcff48] hover:text-white transition-all focus-visible:ring-2 focus-visible:ring-[#bcff48] focus-visible:outline-none rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 active:scale-95 shadow-sm"
+              aria-label={t.nav.ariaCloseMenu}
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* SELECTOR DE IDIOMA Y DIVISA DENTRO DEL MENÚ MÓVIL */}
+          <div className="py-2.5 px-3 my-3 rounded-2xl bg-white/[0.04] border border-white/10 shrink-0 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs text-white/80 font-mono">
+              <Globe className="w-4 h-4 text-[#bcff48]" />
+              <span className="font-semibold">Idioma / Currency:</span>
+            </div>
+            <div className="inline-flex rounded-full bg-black/70 p-1 border border-white/15 shadow-inner">
+              <button
+                type="button"
+                onClick={() => setLanguage('es')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all min-h-[30px] flex items-center gap-1.5 ${
+                  language === 'es'
+                    ? 'bg-[#bcff48] text-black font-black shadow-[0_0_12px_rgba(188,255,72,0.4)]'
+                    : 'text-white/70 hover:text-white'
+                }`}
+                aria-pressed={language === 'es'}
+              >
+                <span>ES</span>
+                <span className="text-[10px] opacity-75 font-mono">€</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all min-h-[30px] flex items-center gap-1.5 ${
+                  language === 'en'
+                    ? 'bg-[#bcff48] text-black font-black shadow-[0_0_12px_rgba(188,255,72,0.4)]'
+                    : 'text-white/70 hover:text-white'
+                }`}
+                aria-pressed={language === 'en'}
+              >
+                <span>EN</span>
+                <span className="text-[10px] opacity-75 font-mono">$</span>
+              </button>
+            </div>
+          </div>
+
+          {/* ENLACES DE NAVEGACIÓN */}
+          <nav className="flex flex-col items-stretch gap-1.5 my-auto font-outfit text-sm tracking-wider uppercase text-white py-1 overflow-y-auto max-w-md mx-auto w-full no-scrollbar">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace('#', '');
+              const isContact = link.href === '#contacto';
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    if (isContact) {
+                      e.preventDefault();
+                      setSpecialistModalOpen(true);
+                    }
+                  }}
+                  className={`group transition-all min-h-[48px] px-4 py-2.5 flex items-center justify-between rounded-xl font-semibold border active:scale-98 ${
+                    isContact
+                      ? 'bg-gradient-to-r from-[#bcff48] to-[#9deb2c] text-black font-black shadow-[0_0_20px_rgba(188,255,72,0.35)] border-[#bcff48] mt-1.5'
+                      : isActive
+                      ? 'bg-[#bcff48]/15 border-[#bcff48]/40 text-[#bcff48] shadow-[0_0_15px_rgba(188,255,72,0.15)]'
+                      : 'bg-white/[0.03] hover:bg-white/[0.07] text-white/90 border-white/10'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    {isActive && !isContact && (
+                      <span className="w-2 h-2 rounded-full bg-[#bcff48] shadow-[0_0_8px_#bcff48]" />
+                    )}
+                    <span>{link.label}</span>
+                  </span>
+                  <ChevronRight
+                    className={`w-4 h-4 transition-transform group-hover:translate-x-1 ${
+                      isContact ? 'text-black' : isActive ? 'text-[#bcff48]' : 'text-white/40'
+                    }`}
+                  />
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* ACCIONES INFERIORES: CATÁLOGO Y TELEGRAM DIRECTO */}
+          <div className="pt-3.5 border-t border-white/10 flex flex-col gap-2 max-w-md mx-auto w-full shrink-0">
+            {/* BOTÓN VER CATÁLOGO */}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setSelectedCatalogPlatform('Google Reviews');
+              }}
+              className="w-full min-h-[46px] rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-98 transition-all shadow-sm"
+            >
+              <span>{t.nav.openCatalogBtn}</span>
+              <ArrowRight className="w-4 h-4 text-[#bcff48]" />
+            </button>
+
+            {/* ACCESO DIRECTO TELEGRAM @SknnyZ */}
+            <a
+              href="https://t.me/SknnyZ"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full min-h-[44px] rounded-xl bg-gradient-to-r from-[#0088cc]/20 via-[#229ed9]/20 to-[#0088cc]/10 border border-[#229ed9]/40 hover:border-[#229ed9]/70 text-cyan-200 font-bold text-xs flex items-center justify-center gap-2 active:scale-98 transition-all"
+            >
+              <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" />
+              <span>Telegram: @SknnyZ (Online 24/7)</span>
+            </a>
+
+            <p className="text-[10px] text-white/50 text-center mt-0.5 section-copy">
+              {t.nav.brandTagline}
+            </p>
           </div>
         </div>
       )}

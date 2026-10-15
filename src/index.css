@@ -59,6 +59,22 @@
   animation: portfolioEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Entrada rápida y suave para el menú móvil */
+@keyframes menuDrawerSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-menu-drawer {
+  animation: menuDrawerSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Adaptación de interacción: Elevación en hover para ratón/trackpad, scale táctil para pantallas touch */
 @media (hover: hover) and (pointer: fine) {
   .portfolio-card-elevate {
@@ -81,7 +97,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-entrance,
-  .animate-portfolio-entrance {
+  .animate-portfolio-entrance,
+  .animate-menu-drawer {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

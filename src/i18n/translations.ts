@@ -432,8 +432,8 @@ export const translations: Record<Language, TranslationsSchema> = {
       quickBarHint: 'Acceso rápido',
     },
     hero: {
-      badge: '★ TRUST REVIEWS',
-      title: 'TRUST REVIEWS',
+      badge: '★ Lacoste',
+      title: 'Lacoste',
       subtitle: 'Gestión de reputación online, publicación estratégica y eliminación de reseñas negativas.',
       ariaNextSection: 'Ir a la siguiente sección',
     },
@@ -1458,8 +1458,8 @@ export const translations: Record<Language, TranslationsSchema> = {
       quickBarHint: 'Quick access',
     },
     hero: {
-      badge: '★ TRUST REVIEWS',
-      title: 'TRUST REVIEWS',
+      badge: '★ Lacoste',
+      title: 'Lacoste',
       subtitle: 'Online reputation management, strategic review deployment, and negative review removal.',
       ariaNextSection: 'Go to next section',
     },

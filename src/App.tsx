@@ -596,7 +596,7 @@ export default function App() {
                 </div>
               </div>
               <span className="section-title text-xl md:text-2xl font-bold tracking-tight text-[#f7f7f2]">
-                Lacoste
+                TrustUp<span className="text-[#bcff48]">Reviews</span>
               </span>
             </a>
 
@@ -2511,7 +2511,7 @@ export default function App() {
                 </div>
               </div>
               <span className="section-title text-xl font-bold text-white tracking-wider">
-                Lacoste
+                TrustUp<span className="text-[#bcff48]">Reviews</span>
               </span>
             </a>
 
